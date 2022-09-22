@@ -1,4 +1,8 @@
 Equipo g5 del g02: the Avengers
 septiembre 22
 Modificado por Jorge Garzon 22/9/2022 15:00
+<<<<<<< HEAD
 Modificado por Jorge Garzon 22/9/2022 15:12
+=======
+Modificado por Daniel Pérez 22/9/2022 15:09
+>>>>>>> 7df170ccdbdbc49a08a89d1c672ed6a315e38e2c
