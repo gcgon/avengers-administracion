@@ -1,5 +1,9 @@
 package com.proyecto.aplicacion.repository;
 
-public interface PagoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.proyecto.aplicacion.model.Pago;
+
+public interface PagoRepository extends JpaRepository<Pago, Long> {
 
 }
