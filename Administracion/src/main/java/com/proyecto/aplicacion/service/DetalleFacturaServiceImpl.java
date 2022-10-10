@@ -3,32 +3,43 @@ package com.proyecto.aplicacion.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.proyecto.aplicacion.model.DetalleFactura;
+import com.proyecto.aplicacion.repository.DetalleFacturaRepository;
 
+@Service
 public class DetalleFacturaServiceImpl implements DetalleFacturaService {
-
+	
+	@Autowired
+	private DetalleFacturaRepository repositorio;
+	
+	
 	@Override
+	@Transactional
 	public List<DetalleFactura> consultarDetallesFactura() {
-		// TODO Auto-generated method stub
-		return null;
+		return repositorio.findAll();
 	}
 
 	@Override
+	@Transactional
 	public Optional<DetalleFactura> consultarDetalleFactura(Long nroDetalleFactura) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+		return repositorio.findById(nroDetalleFactura);
 	}
 
 	@Override
-	public DetalleFactura crearDetalleFactura(DetalleFactura detallefactura) {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public DetalleFactura crearDetalleFactura(DetalleFactura detalleFactura) {
+		return repositorio.save(detalleFactura);
 	}
 
 	@Override
+	@Transactional
 	public void eliminarDetalleFactura(Long nroDetalleFactura) {
-		// TODO Auto-generated method stub
-
+		repositorio.deleteById(nroDetalleFactura);
 	}
 
 }

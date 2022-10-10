@@ -8,7 +8,7 @@ import com.proyecto.aplicacion.model.Factura;
 
 public interface FacturaService {
 	public List<Factura> consultarFacturas();
-	public Optional<Factura>consultarFactura(Long nroFactura);
+	public Optional<Factura>consultaUnaFactura(Long id);
 	public Factura crearFactura(Factura factura);
-	public void eliminarFactura(Long nroFactura);
+	public void eliminarFactura(Long id);
 }

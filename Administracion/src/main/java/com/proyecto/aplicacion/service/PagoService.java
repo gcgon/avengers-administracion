@@ -8,7 +8,7 @@ import com.proyecto.aplicacion.model.Pago;
 
 public interface PagoService {
 	public List<Pago> consultarPagos();
-	public Optional<Pago>consultarPago(Long codigoPago);
+	public Optional<Pago>consultarPagoPorId(Long codigoPago);
 	public Pago crearPago(Pago pago);
 	public void eliminarPago(Long codigoPago);
 }

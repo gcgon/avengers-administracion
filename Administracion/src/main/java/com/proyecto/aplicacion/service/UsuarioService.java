@@ -7,8 +7,8 @@ import com.proyecto.aplicacion.model.Usuario;
 
 
 public interface UsuarioService {
-	public List<Usuario> consultarFacturas();
-	public Optional<Usuario>consultarFacturaById(Long nroDocumento);
-	public Usuario crearFactura(Usuario usuario);
-	public void eliminarFacturaById(Long nroDocumento);
+	public List<Usuario> consultarUsuarios();
+	public Optional<Usuario>consultarUsuario(Long nroDocumento);
+	public Usuario crearUsuario(Usuario usuario);
+	public void eliminarUsuario(Long nroDocumento);
 }
