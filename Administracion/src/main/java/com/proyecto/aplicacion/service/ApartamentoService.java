@@ -1,14 +1,14 @@
-package com.proyecto.aplicacion.service;
+package com.example.apartamento.services;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.proyecto.aplicacion.model.Apartamento;
-
+import com.example.apartamento.model.apartamento;
 
 public interface ApartamentoService {
-	public List<Apartamento> consultarApartamentos();
-	public Optional<Apartamento>consultarApartamento(Long idApartamento);
-	public Apartamento crearApartamento(Apartamento apartamento);
-	public void eliminarApartamento(Long idApartamento);
+	public List<apartamento> consultarApartamentos();
+	public Optional<apartamento> guardarApartamentos (Long id_apartamento);
+	public apartamento guardarApartamentos(apartamento id_apartamento);
+	public Optional<apartamento> guardararApartamentos (Long id_apartamento);
+	public void eliminaeApartamentos (Long id_apartamento);
 }

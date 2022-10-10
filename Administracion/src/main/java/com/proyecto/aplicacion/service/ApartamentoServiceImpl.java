@@ -1,34 +1,60 @@
-package com.proyecto.aplicacion.service;
+package com.example.apartamento.services;
+
 
 import java.util.List;
 import java.util.Optional;
 
-import com.proyecto.aplicacion.model.Apartamento;
+import javax.transaction.Transactional;
 
-public class ApartamentoServiceImpl implements ApartamentoService{
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.example.apartamento.model.apartamento;
+import com.example.apartamento.repository.ApartamentoRepository;
+
+@Service
+public class ApartamentoServiceimpl implements ApartamentoService {
+	@Autowired
+	private ApartamentoRepository repositorio;
+	
 	@Override
-	public List<Apartamento> consultarApartamentos() {
+	@Transactional
+	public List<apartamento> consultarApartamentos() {
 		// TODO Auto-generated method stub
-		return null;
+		return repositorio.findAll();
+	}
+
+	public Optional<apartamento> consultarApartamentos(Long id_apartamento) {
+		// TODO Auto-generated method stub
+		return repositorio.findById(id_apartamento);
 	}
 
 	@Override
-	public Optional<Apartamento> consultarApartamento(Long codigoApartamento) {
+	public apartamento guardarApartamentos(apartamento id_apartamento) {
+		// TODO Auto-generated method stub
+		return repositorio.save(id_apartamento);
+	}
+
+
+	@Override
+	public void eliminaeApartamentos(Long id_apartamento) {
+		// TODO Auto-generated method stub
+		repositorio.deleteById(id_apartamento);
+
+	}
+
+	@Override
+	public Optional<apartamento> guardarApartamentos(Long id_apartamento) {
 		// TODO Auto-generated method stub
 		return Optional.empty();
 	}
 
 	@Override
-	public Apartamento crearApartamento(Apartamento apartamento) {
+	public Optional<apartamento> guardararApartamentos(Long id_apartamento) {
 		// TODO Auto-generated method stub
-		return null;
+		return Optional.empty();
 	}
 
-	@Override
-	public void eliminarApartamento(Long codigoApartamento) {
-		// TODO Auto-generated method stub
-		
-	}
+}
 
 }
