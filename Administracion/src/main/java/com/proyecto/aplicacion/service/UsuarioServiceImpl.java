@@ -1,34 +1,51 @@
+/**
+ * 
+ */
 package com.proyecto.aplicacion.service;
 
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.proyecto.aplicacion.model.Usuario;
+import com.proyecto.aplicacion.repository.UsuarioRepository;
 
+/**
+ * @author Miguel Ángel Reinosa Quintero
+ *
+ */
+
+@Service
 public class UsuarioServiceImpl implements UsuarioService {
+	@Autowired
+	private UsuarioRepository repositorio;
 
 	@Override
-	public List<Usuario> consultarFacturas() {
-		// TODO Auto-generated method stub
-		return null;
+	@Transactional
+	public List<Usuario> consultarUsuarios() {
+		return repositorio.findAll();
+	}
+	
+	@Override
+	@Transactional
+	public Optional<Usuario> consultarUsuarioPorId(Long id) {
+		return repositorio.findById(id);
 	}
 
 	@Override
-	public Optional<Usuario> consultarFacturaById(Long nroDocumento) {
-		// TODO Auto-generated method stub
-		return Optional.empty();
+	@Transactional
+	public Usuario guardarUsuario(Usuario usuario) {
+		return repositorio.save(usuario);
 	}
 
 	@Override
-	public Usuario crearFactura(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void eliminarFacturaById(Long nroDocumento) {
-		// TODO Auto-generated method stub
-
+	@Transactional
+	public void eliminarUsuario(Long id) {
+		repositorio.deleteById(id);
 	}
 
 }
