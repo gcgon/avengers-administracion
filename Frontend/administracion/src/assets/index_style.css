@@ -1,0 +1,49 @@
+:root {
+    --bg: 4.2rem;
+    --md-bg: 3.6rem;
+    --md: 2.8rem;
+    --sm: 1.6rem;
+    --border-buttons: 16px;
+    --border-others: 36px;
+    --background-second: rgba(217, 217, 217, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Quicksand', sans-serif;
+    background-color: white;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+}
+
+a {
+    text-decoration: none;
+    font-size: var(--md);
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+a:hover {
+    background-color: var(--background-second);
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+}
+
+tbody,
+tr {
+    width: 100%;
+    background-color: transparent;
+}
