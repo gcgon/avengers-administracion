@@ -16,6 +16,12 @@ public class UsuarioServiceImpl implements UsuarioService {
 	
 	@Autowired
 	private UsuarioRepository repositorio;
+	
+	@Override
+	@Transactional
+	public Usuario crearUsuario(Usuario usuario) {
+		return repositorio.save(usuario);
+	}
 
 	@Override
 	@Transactional
@@ -28,13 +34,13 @@ public class UsuarioServiceImpl implements UsuarioService {
 	public Optional<Usuario> consultarUsuario(Long nroDocumento) {
 		return repositorio.findById(nroDocumento);
 	}
-
+	
 	@Override
-	@Transactional
-	public Usuario crearUsuario(Usuario usuario) {
-		return repositorio.save(usuario);
+	public List<Usuario> consultarAdminUser(Long nroDocumento) {
+		List<Usuario> personas = repositorio.consultarAdminUser(nroDocumento);
+		return personas;
 	}
-
+	
 	@Override
 	@Transactional
 	public void eliminarUsuario(Long nroDocumento) {

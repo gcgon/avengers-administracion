@@ -7,8 +7,9 @@ import com.proyecto.aplicacion.model.Usuario;
 
 
 public interface UsuarioService {
-	public List<Usuario> consultarUsuarios();
 	public Optional<Usuario>consultarUsuario(Long nroDocumento);
+	public List<Usuario>consultarAdminUser(Long nroDocumento);
+	public List<Usuario> consultarUsuarios();
 	public Usuario crearUsuario(Usuario usuario);
 	public void eliminarUsuario(Long nroDocumento);
 }

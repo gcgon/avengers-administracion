@@ -53,7 +53,7 @@ public class ConjuntoController {
 		}
 		
 		BeanUtils.copyProperties(detalleConjunto, conjunto.get());
-		
+		conjunto.get().setNitConjunto(nitConjunto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(conjuntoService.crearConjunto(conjunto.get()));
 	}
 	

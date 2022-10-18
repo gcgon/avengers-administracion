@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.proyecto.aplicacion.model.Apartamento;
-import com.proyecto.aplicacion.model.Conjunto;
 import com.proyecto.aplicacion.service.ApartamentoService;
 
 @RestController
@@ -40,8 +39,8 @@ public class ApartamentoController implements Serializable {
 		return apartamentoService.consultarApartamentos();					
 	}
 	
-	@GetMapping("/{nitConjunto}")
-	public ResponseEntity<?> consultarFactura(@PathVariable Long idApartamento){
+	@GetMapping("/{idApartamento}")
+	public ResponseEntity<?> consultarApartamento(@PathVariable Long idApartamento){
 		Optional<Apartamento> apartamento = apartamentoService.consultarApartamento(idApartamento);
 		if(!apartamento.isPresent()) {
 			return ResponseEntity.notFound().build();
@@ -49,20 +48,20 @@ public class ApartamentoController implements Serializable {
 		return ResponseEntity.ok(apartamento);
 	}
 	
-	@PutMapping("/{nitConjunto}")
-	public ResponseEntity<?> actualizarConjunto(@RequestBody Conjunto detalleApartamento, @PathVariable Long idApartamento){
+	@PutMapping("/{idApartamento}")
+	public ResponseEntity<?> actualizarApartamento(@RequestBody Apartamento detalleApartamento, @PathVariable Long idApartamento){
 		Optional<Apartamento> apartamento = apartamentoService.consultarApartamento(idApartamento);
 		if(!apartamento.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
 		BeanUtils.copyProperties(detalleApartamento, apartamento.get());
-		
+		apartamento.get().setIdApartamento(idApartamento);
 		return ResponseEntity.status(HttpStatus.CREATED).body(apartamentoService.crearApartamento(apartamento.get()));
 	}
 	
 	
-	@DeleteMapping("/{nitConjunto}")
+	@DeleteMapping("/{idApartamento}")
 	public ResponseEntity<?> eliminarApartamento(@PathVariable Long idApartamento){
 		Optional<Apartamento> apartamento = apartamentoService.consultarApartamento(idApartamento);
 		if(!apartamento.isPresent()) {

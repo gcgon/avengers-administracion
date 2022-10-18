@@ -53,12 +53,12 @@ public class DetalleFacturaController {
 			return ResponseEntity.notFound().build();
 		}
 		BeanUtils.copyProperties(conceptoDetalleF, detalleFactura.get());
-						
+		detalleFactura.get().setNorDetalleFactura(nroDetalleFactura);				
 		return ResponseEntity.status(HttpStatus.CREATED).body(detalleFacturaService.crearDetalleFactura(detalleFactura.get()));
 	}
 	
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/{nroDetalleFactura}")
 	public ResponseEntity<?> eliminarDetalleFactura(@PathVariable Long nroDetalleFactura){
 		Optional<DetalleFactura> detalleFactura = detalleFacturaService.consultarDetalleFactura(nroDetalleFactura);
 		if(!detalleFactura.isPresent()) {

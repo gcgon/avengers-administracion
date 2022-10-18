@@ -6,6 +6,8 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,13 +21,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Apartamento {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idApartamento;
-	@Column(length = 25, nullable=false)
-	private Long nit_conjunto;
-	@Column(length = 25, nullable=false)
-	private Long nro_documento_usario;
-	@Column(nullable=false, unique=true)
-	private Long bloque_apartamentto;
+	@Column(nullable=false)
+	private Long bloque_apartamento;
 	@Column(length = 2, nullable=false)
 	private Long numero_apartamento;
 	
@@ -48,23 +47,11 @@ public class Apartamento {
 	public void setIdApartamento(Long idApartamento) {
 		this.idApartamento = idApartamento;
 	}
-	public Long getNit_conjunto() {
-		return nit_conjunto;
+	public Long getBloque_apartamento() {
+		return bloque_apartamento;
 	}
-	public void setNit_conjunto(Long nit_conjunto) {
-		this.nit_conjunto = nit_conjunto;
-	}
-	public Long getNro_documento_usario() {
-		return nro_documento_usario;
-	}
-	public void setNro_documento_usario(Long nro_documento_usario) {
-		this.nro_documento_usario = nro_documento_usario;
-	}
-	public Long getBloque_apartamentto() {
-		return bloque_apartamentto;
-	}
-	public void setBloque_apartamentto(Long bloque_apartamentto) {
-		this.bloque_apartamentto = bloque_apartamentto;
+	public void setBloque_apartamento(Long bloque_apartamentto) {
+		this.bloque_apartamento = bloque_apartamentto;
 	}
 	public Long getNumero_apartamento() {
 		return numero_apartamento;
@@ -93,8 +80,7 @@ public class Apartamento {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(bloque_apartamentto, facturas, idApartamento, nit_conjunto, nro_documento_usario,
-				numero_apartamento);
+		return Objects.hash(bloque_apartamento, conjunto, facturas, idApartamento, numero_apartamento, usuario);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -105,18 +91,18 @@ public class Apartamento {
 		if (getClass() != obj.getClass())
 			return false;
 		Apartamento other = (Apartamento) obj;
-		return Objects.equals(bloque_apartamentto, other.bloque_apartamentto) && Objects.equals(facturas, other.facturas)
-				&& Objects.equals(idApartamento, other.idApartamento)
-				&& Objects.equals(nit_conjunto, other.nit_conjunto)
-				&& Objects.equals(nro_documento_usario, other.nro_documento_usario)
-				&& Objects.equals(numero_apartamento, other.numero_apartamento);
+		return Objects.equals(bloque_apartamento, other.bloque_apartamento) && Objects.equals(conjunto, other.conjunto)
+				&& Objects.equals(facturas, other.facturas) && Objects.equals(idApartamento, other.idApartamento)
+				&& Objects.equals(numero_apartamento, other.numero_apartamento)
+				&& Objects.equals(usuario, other.usuario);
 	}
 	@Override
 	public String toString() {
-		return "Apartamento [idApartamento=" + idApartamento + ", nit_conjunto=" + nit_conjunto
-				+ ", nro_documento_usario=" + nro_documento_usario + ", bloque_apartamentto=" + bloque_apartamentto
-				+ ", numero_apartamento=" + numero_apartamento + ", factura=" + facturas + "]";
+		return "Apartamento [idApartamento=" + idApartamento + ", bloque_apartamento=" + bloque_apartamento
+				+ ", numero_apartamento=" + numero_apartamento + ", facturas=" + facturas + ", usuario=" + usuario
+				+ ", conjunto=" + conjunto + "]";
 	}
+	
 		
 	
 }

@@ -7,8 +7,6 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -23,7 +21,6 @@ public class Conjunto implements Serializable {
 
 	private static final long serialVersionUID = 3108585289022917839L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long nitConjunto;
 	@Column(length = 70, nullable=false)
 	private String nombreConjunto;

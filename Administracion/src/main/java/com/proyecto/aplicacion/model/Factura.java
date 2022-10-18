@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,6 +24,7 @@ public class Factura {
 	
 	private static final long serialVersionUID = 8576299165550475463L;
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long nroFactura;
 	private Date fechaFactura;
 	private Float valor;

@@ -53,17 +53,15 @@ public class Pago implements Serializable{
 	public void setValorPago(BigDecimal valorPago) {
 		this.valorPago = valorPago;
 	}
-	
-	
-	public Factura getNumeroFactura() {
+	public Factura getFactura() {
 		return factura;
 	}
-	public void setNumeroFactura(Factura numeroFactura) {
-		this.factura = numeroFactura;
+	public void setFactura(Factura factura) {
+		this.factura = factura;
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(codigoPago, fechaPago, factura, valorPago);
+		return Objects.hash(codigoPago, factura, fechaPago, valorPago);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -74,15 +72,13 @@ public class Pago implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Pago other = (Pago) obj;
-		return Objects.equals(codigoPago, other.codigoPago) && Objects.equals(fechaPago, other.fechaPago)
-				&& Objects.equals(factura, other.factura) && Objects.equals(valorPago, other.valorPago);
+		return Objects.equals(codigoPago, other.codigoPago) && Objects.equals(factura, other.factura)
+				&& Objects.equals(fechaPago, other.fechaPago) && Objects.equals(valorPago, other.valorPago);
 	}
 	@Override
 	public String toString() {
-		return "Pago [codigoPago=" + codigoPago + ", fechaPago=" + fechaPago + ", valorPago=" + valorPago
-				+ ", numeroFactura=" + factura + "]";
-	}
-	
-	
+		return "Pago [codigoPago=" + codigoPago + ", fechaPago=" + fechaPago + ", valorPago=" + valorPago + ", factura="
+				+ factura + "]";
+	}	
 	
 }

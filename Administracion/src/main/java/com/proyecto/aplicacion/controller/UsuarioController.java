@@ -1,6 +1,7 @@
 package com.proyecto.aplicacion.controller;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
@@ -28,6 +29,10 @@ public class UsuarioController  implements Serializable {
 	@Autowired
 	private UsuarioService servicio;
 	
+	@GetMapping
+	public List<Usuario> consultarUsuarios(){
+		return servicio.consultarUsuarios();					
+	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> getUsuario(@PathVariable Long id){
@@ -51,7 +56,7 @@ public class UsuarioController  implements Serializable {
 			return ResponseEntity.notFound().build();
 		} 
 		BeanUtils.copyProperties(usuario, persona.get());
-		
+		persona.get().setNro_documento_usuario(id);
 		return ResponseEntity.status(HttpStatus.CREATED).body(servicio.crearUsuario(usuario));
 	}
 	
