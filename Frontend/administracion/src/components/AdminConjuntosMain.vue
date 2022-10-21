@@ -1,100 +1,188 @@
 <template>
-
     <main>
         <form action="">
             <section class="section-izquierda">
-
                 <fieldset>
-                    <label for="nit" >Nit</label>
-                    <input type="number" id="nit" name="nit" required>
+                    <label for="nit">Nit</label>
+                    <input type="number" id="nit" v-model.number="nitConjunto" name="nitConjunto" required />
                 </fieldset>
 
                 <fieldset>
-                    <label for="numero_cuotas">Nombre</label>
-                    <input type="number" id="numero_coutas" name="numero_cuotas" required>
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" v-model="nombreConjunto" name="nombreConjunto" required />
                 </fieldset>
-
             </section>
 
             <section class="section-derecha">
-
                 <fieldset>
-                    <label for="direccion" >Dirección</label>
-                    <input type="text" id="direccion" name="direccion" required>
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" v-model="direccionConjunto" name="direccionConjunto" required />
                 </fieldset>
 
                 <fieldset>
                     <label for="telefono">Teléfono</label>
-                    <input type="number" id="telefono" name="telefono" required>
+                    <input type="text" id="telefono" v-model="telefonoConjunto" name="telefonoConjunto" required />
                 </fieldset>
-
             </section>
-            <button>
-                Crear
-            </button>
-            
+            <button id="crear" @click="crear" type="button" class="btn btn-outline-primary">Crear</button>
         </form>
         <section class="section-inferior">
 
-                <table>
-                    <tr>
-                        <th>Nit</th>
-                        <th>Nombre</th>
-                        <th>Dirección</th>
-                        <th>Teléfono del conjunto</th>
-                        <th></th>
-                    </tr>
+            <table id="tabla">
+                <tr>
+                    <th>Nit</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Teléfono del conjunto</th>
+                    <th></th>
+                </tr>
 
-                    <tr>
-                        <td>1111</td>
-                        <td>Kumarú</td>
-                        <td>Calle 150C #117-71</td>
-                        <td>5376574</td>
-                        <td>
-                            <img src="./imgs/agregar.png" alt="agregar">
-                            <img src="./imgs/lapiz.png" alt="agregar">
-                            <img src="./imgs/basura.png" alt="agregar">
-                        </td>
-                    </tr>
+                <tr v-for="(conjunto,index) in conjuntos" :key="index">
+                    <td>{{conjunto.nitConjunto}}</td>
+                    <td>{{conjunto.nombreConjunto}}</td>
+                    <td>{{conjunto.direccionConjunto}}</td>
+                    <td>{{conjunto.telefonoConjunto}}</td>
+                    <td>
+                        <img src="./imgs/agregar.png" alt="agregar"
+                            @click="this.$router.push('crearUsuariosAdministrador')" />
+                        <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(conjunto)" />
+                        <img src="./imgs/basura.png" alt="agregar" @click="eliminar(conjunto.nitConjunto)" />
+                    </td>
+                </tr>
+            </table>
 
-                </table>
-                
-                <button>
-                    Ver apartamentos
-                </button>
-            </section>
+            <button>Ver apartamentos</button>
+        </section>
     </main>
-    
 </template>
 
 <script>
-export default ({
-    data(){
-        return{
-            encabezados:['Pagos', 'Facturación', 'Informes'],
-            detalles:{
-                FechaFactura: Date,
-                Ncuotas: Number,
-                Vcuotas: Number,
-                Conjunto: Text,
-                Bloque: Number,
-                Apartamento: Number,
-            }
-        }
-    }, 
-    methods: {
-        Prueba(){
-            this.FechaFactura = document.getElementById("numero_cuotas");
-            console.log(document.getElementById("numero_cuotas"));
-        }
-    }
-})
 
+export default {
+    data() {
+        return {
+            encabezados: ["Pagos", "Facturación", "Informes"],
+            conjuntos: [] /**este es el array para la lista de nombre en la box de nombres creados que se van apilando */,
+            nombreConjunto: "" /*para el input denombre*/,
+            nitConjunto: "" /*para el input de apellido */,
+            direccionConjunto: "",
+            telefonoConjunto: "",
+            token: localStorage.getItem("tokenLogin"),
+            mensajeError: "",
+            actualizando: false,
+            url: "http://localhost:8080/api/Conjunto",
+            metodo: "GET",
+            parametros: {},
+
+        };
+    },
+
+    methods: {
+        crear() {
+            if (this.entradaValida()) {
+
+                if (!this.actualizando) {
+                    this.parametros.nitConjunto = this.nitConjunto;
+                    this.parametros.nombreConjunto = this.nombreConjunto;
+                    this.parametros.direccionConjunto = this.direccionConjunto;
+                    this.parametros.telefonoConjunto = this.telefonoConjunto;
+                    this.metodo = "POST";
+                    this.hacerPeticion();
+                    console.log(this.conjuntos);
+                    this.nombreConjunto = this.direccionConjunto = "";
+                    this.telefonoConjunto = this.nitConjunto = "";
+                    this.mensajeError = "";
+                    this.actualizando = false;
+                    this.$forceUpdate();
+                } else {
+                    this.parametros.nombreConjunto = this.nombreConjunto;
+                    this.parametros.direccionConjunto = this.direccionConjunto;
+                    this.parametros.telefonoConjunto = this.telefonoConjunto;
+                    this.metodo = "PUT";
+                    this.url = this.url + `/${this.nitConjunto}`
+                    this.hacerPeticion();
+                };
+
+            } else {
+                this.mensajeError = "Por favor ingrese todos los datos.";
+                alert(this.mensajeError);
+            }
+        },
+
+        actualizar(conjunto) {
+            console.log(conjunto);
+            this.nitConjunto = conjunto.nitConjunto;
+            document.getElementById('nit').disabled = true;
+            this.nombreConjunto = conjunto.nombreConjunto;
+            this.direccionConjunto = conjunto.direccionConjunto;
+            this.telefonoConjunto = conjunto.telefonoConjunto;
+            document.getElementById('crear').innerText = "Actualizar";
+
+            this.actualizando = true;
+        },
+
+        eliminar(nitConjunto) {
+            this.metodo = "DELETE";
+            this.url = this.url + `/${nitConjunto}`
+            this.hacerPeticion();
+            window.location.reload();
+        },
+
+
+        entradaValida() {
+            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
+        },
+
+        async hacerPeticion() {
+            let options = {};
+            if (this.metodo != "GET" && this.metodo != "DELETE") {
+                options = {
+                    method: this.metodo,
+                    body: JSON.stringify(this.parametros),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.token,
+                    },
+                };
+            } else {
+                options = {
+                    method: this.metodo,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.token,
+                    },
+                };
+            }
+
+            fetch(this.url, options).then(async (response) => {
+                if (!response.ok) {
+                    const error = response.statusText;
+                    // error.json = response.json();
+                    this.mensajeError = error.message;
+                    throw error;
+                } else {
+                    const data = await response.json();
+                    console.log(data);
+                    if (data.length > 0) {
+                        for (let conjunto in data) {
+                            const data1 = data[conjunto]
+                            this.conjuntos.push(data1);
+                        };
+                    }
+                    else {
+                        window.location.reload();
+                    };
+                };
+            });
+        },
+    },
+    mounted() {
+        this.hacerPeticion();
+    },
+};
 </script>
 
-
 <style scoped>
-
 main {
     height: 100%;
     grid-row: 2/3;
@@ -152,7 +240,7 @@ label {
     font-weight: bold;
 }
 
-input{
+input {
     width: 50%;
     border: none;
     background-color: var(--background-second);
@@ -164,8 +252,8 @@ input{
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 table {
@@ -195,11 +283,13 @@ th:nth-child(5) {
     width: 20%;
 }
 
-th, td {
+th,
+td {
     background-color: transparent;
 }
 
-td, th {
+td,
+th {
     text-align: center;
     padding: 8px;
 }
@@ -208,9 +298,10 @@ img {
     height: 30px;
     background-color: transparent;
     margin-left: 30px;
+    cursor: pointer;
 }
 
-input[type=checkbox] {
+input[type="checkbox"] {
     height: 20px;
 }
 
@@ -231,5 +322,4 @@ button {
 button:hover {
     background-color: var(--background-second);
 }
-
 </style>
