@@ -26,9 +26,10 @@ public class AuthorizationController {
     
     @PostMapping
 	public ResponseEntity<?> createtoken(@RequestBody Usuario usuarioDetalle){
-		List<Usuario> usuario = UsuarioService.consultarAdminUser(usuarioDetalle.getNro_documento_usuario());
+		List<Usuario> usuario = UsuarioService.consultarAdminUser(usuarioDetalle.getNro_documento_usuario(), usuarioDetalle.getClave());
 		if(usuario!=null && usuario.size()>0) {
 			String tokenJwt = jwtUtil.getJWTToken(usuario.get(0).getNro_documento_usuario()+"");
+			tokenJwt=tokenJwt+"("+usuario;
             return ResponseEntity.ok(new JSONObject().put("access", tokenJwt.replace("Bearer ", "")).toString());
 		} 
 		return ResponseEntity.notFound().build();

@@ -62,9 +62,9 @@ export default {
     data() {
         return {
             encabezados: ["Pagos", "Facturación", "Informes"],
-            conjuntos: [] /**este es el array para la lista de nombre en la box de nombres creados que se van apilando */,
-            nombreConjunto: "" /*para el input denombre*/,
-            nitConjunto: "" /*para el input de apellido */,
+            conjuntos: [],
+            nombreConjunto: "",
+            nitConjunto: "",
             direccionConjunto: "",
             telefonoConjunto: "",
             token: localStorage.getItem("tokenLogin"),
@@ -156,13 +156,13 @@ export default {
 
             fetch(this.url, options).then(async (response) => {
                 if (!response.ok) {
-                    const error = response.statusText;
-                    // error.json = response.json();
+                    const { error } = response;
+                    //error.json = response.json();
                     this.mensajeError = error.message;
                     throw error;
                 } else {
                     const data = await response.json();
-                    console.log(data);
+
                     if (data.length > 0) {
                         for (let conjunto in data) {
                             const data1 = data[conjunto]

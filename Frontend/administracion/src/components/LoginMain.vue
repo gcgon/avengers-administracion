@@ -89,8 +89,6 @@ export default {
           localStorage.setItem("tokenLogin", this.token);
           localStorage.setItem("persona", this.persona);
           console.log(this.persona);
-          console.log(data);
-          console.log(this.token);
         }
       });//[this.apellido, this.nombre] = nombreCompleto.toString().split(", ");
     },

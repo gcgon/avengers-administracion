@@ -11,12 +11,12 @@
 
                 <fieldset>
                     <label for="apellido">Apellido(s)</label>
-                    <input type="text" id="apellido" name="apellido" required>
+                    <input type="text" v-model="apellido" id="apellido" name="apellido" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="contrasenia">Contraseña</label>
-                    <input type="password" id="contrasenia" name="contrasenia" required>
+                    <input type="password" v-model="clave" id="contrasenia" name="contrasenia" required>
                 </fieldset>
 
             </section>
@@ -25,17 +25,18 @@
 
                 <fieldset>
                     <label for="tipo_documento">Tipo de documento</label>
-                    <input type="text" id="tipo_documento" name="tipo_documento" required>
+                    <input type="text" v-model="tipoDocumento" id="tipo_documento" name="tipo_documento" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="numero_documento">Número de Documento</label>
-                    <input type="number" id="numero_documento" name="numero_documento" required>
+                    <input type="number" v-model.number="nro_documento_usuario" id="numero_documento"
+                        name="numero_documento" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="numero_contacto">Número de contacto</label>
-                    <input type="number" id="numero_contacto" name="numero_contacto" required>
+                    <input type="number" v-model.number="telefono" id="numero_contacto" name="numero_contacto" required>
                 </fieldset>
 
             </section>
@@ -49,6 +50,36 @@
                 <button>
                     Crear Usuario
                 </button>
+
+                <table id="tabla">
+                    <tr>
+                        <th>Tipo documento</th>
+                        <th>Número de documento</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Teléfono</th>
+                        <th>Rol</th>
+                        <th>Clave</th>
+
+                        <th></th>
+                    </tr>
+
+                    <tr v-for="(usuario,index) in usuarios" :key="index">
+                        <td>{{usuario.tipoDocumento}}</td>
+                        <td>{{usuario.nro_documento_usuario}}</td>
+                        <td>{{usuario.nombreUsuario}}</td>
+                        <td>{{usuario.apellido}}</td>
+                        <td>{{usuario.telefono}}</td>
+                        <td>{{usuario.rol}}</td>
+                        <td>{{usuario.clave}}</td>
+                        <td>
+                            <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(usuario)" />
+                            <img src="./imgs/basura.png" alt="agregar"
+                                @click="eliminar(usuario.nro_documento_usuario)" />
+                        </td>
+                    </tr>
+                </table>
+
             </section>
 
         </form>
@@ -62,15 +93,18 @@
 export default {
     data() {
         return {
-            conjuntos: [] /**este es el array para la lista de nombre en la box de nombres creados que se van apilando */,
-            nombreConjunto: "" /*para el input denombre*/,
-            nitConjunto: "" /*para el input de apellido */,
-            direccionConjunto: "",
-            telefonoConjunto: "",
+            usuarios: [],
+            nombreUsuario: "",
+            apellido: "",
+            tipoDocumento: "",
+            nro_documento_usuario: "",
+            telefono: "",
+            rol: "",
+            clave: "",
             token: localStorage.getItem("tokenLogin"),
             mensajeError: "",
             actualizando: false,
-            url: "http://localhost:8080/api/Conjunto",
+            url: "http://localhost:8080/api/usuario",
             metodo: "GET",
             parametros: {},
 
@@ -82,24 +116,35 @@ export default {
             if (this.entradaValida()) {
 
                 if (!this.actualizando) {
-                    this.parametros.nitConjunto = this.nitConjunto;
-                    this.parametros.nombreConjunto = this.nombreConjunto;
-                    this.parametros.direccionConjunto = this.direccionConjunto;
-                    this.parametros.telefonoConjunto = this.telefonoConjunto;
+                    this.parametros.nombreUsuario = this.nombreUsuario;
+                    this.parametros.apellido = this.apellido;
+                    this.parametros.nro_documento_usuario = this.nro_documento_usuario;
+                    this.parametros.tipoDocumento = this.tipoDocumento;
+                    this.parametros.telefono = this.telefono;
+                    this.parametros.rol = this.rol;
+                    this.parametros.clave = this.clave;
                     this.metodo = "POST";
                     this.hacerPeticion();
-                    console.log(this.conjuntos);
-                    this.nombreConjunto = this.direccionConjunto = "";
-                    this.telefonoConjunto = this.nitConjunto = "";
+                    console.log(this.usuarios);
+                    this.nombreUsuario = "";
+                    this.apellido = "";
+                    this.telefono = "";
+                    this.nro_documento_usuario = "";
+                    this.tipoDocumento = "";
+                    this.rol = "";
+                    this.clave = "";
                     this.mensajeError = "";
                     this.actualizando = false;
                     this.$forceUpdate();
                 } else {
-                    this.parametros.nombreConjunto = this.nombreConjunto;
-                    this.parametros.direccionConjunto = this.direccionConjunto;
-                    this.parametros.telefonoConjunto = this.telefonoConjunto;
+                    this.parametros.nombreUsuario = this.nombreUsuario;
+                    this.parametros.apellido = this.apellido;
+                    this.parametros.tipoDocumento = this.tipoDocumento;
+                    this.parametros.telefono = this.telefono;
+                    this.parametros.rol = this.rol;
+                    this.parametros.clave = this.clave;
                     this.metodo = "PUT";
-                    this.url = this.url + `/${this.nitConjunto}`
+                    this.url = this.url + `/${this.nro_documento_usuario}`
                     this.hacerPeticion();
                 };
 
@@ -109,28 +154,32 @@ export default {
             }
         },
 
-        actualizar(conjunto) {
-            console.log(conjunto);
-            this.nitConjunto = conjunto.nitConjunto;
-            document.getElementById('nit').disabled = true;
-            this.nombreConjunto = conjunto.nombreConjunto;
-            this.direccionConjunto = conjunto.direccionConjunto;
-            this.telefonoConjunto = conjunto.telefonoConjunto;
+        actualizar(usuario) {
+            console.log(usuario);
+            this.nro_documento_usuario = usuario.nro_documento_usuario;
+            document.getElementById('numero_documento').disabled = true;
+            this.nombreUsuario = usuario.nombreUsuario;
+            this.apellido = usuario.apellido;
+            this.telefono = usuario.telefono;
+            this.tipoDocumento = usuario.tipoDocumento;
+            this.rol = usuario.rol;
+            this.clave = usuario.clave;
+
             document.getElementById('crear').innerText = "Actualizar";
 
             this.actualizando = true;
         },
 
-        eliminar(nitConjunto) {
+        eliminar(nro_documento_usuario) {
             this.metodo = "DELETE";
-            this.url = this.url + `/${nitConjunto}`
+            this.url = this.url + `/${nro_documento_usuario}`
             this.hacerPeticion();
             window.location.reload();
         },
 
 
         entradaValida() {
-            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
+            return toString(this.nro_documento_usuario).trim() && this.tipoDocumento.trim() && this.nombreUsuario.trim() && this.apellido.trim() && toString(this.telefono).trim && this.rol.trim() && this.clave.trim();
         },
 
         async hacerPeticion() {
@@ -164,9 +213,9 @@ export default {
                     const data = await response.json();
                     console.log(data);
                     if (data.length > 0) {
-                        for (let conjunto in data) {
-                            const data1 = data[conjunto]
-                            this.conjuntos.push(data1);
+                        for (let usuario in data) {
+                            const data1 = data[usuario]
+                            this.usuarios.push(data1);
                         };
                     }
                     else {

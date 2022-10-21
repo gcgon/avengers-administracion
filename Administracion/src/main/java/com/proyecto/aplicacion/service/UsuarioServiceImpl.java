@@ -36,8 +36,8 @@ public class UsuarioServiceImpl implements UsuarioService {
 	}
 	
 	@Override
-	public List<Usuario> consultarAdminUser(Long nroDocumento) {
-		List<Usuario> personas = repositorio.consultarAdminUser(nroDocumento);
+	public List<Usuario> consultarAdminUser(Long nroDocumento, String clave) {
+		List<Usuario> personas = repositorio.consultarAdminUser(nroDocumento, clave);
 		return personas;
 	}
 	
