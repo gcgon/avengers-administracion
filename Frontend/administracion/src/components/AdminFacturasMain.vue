@@ -5,18 +5,18 @@
             <section class="section-izquierda">
 
                 <fieldset>
-                    <label for="fecha_factura" >Fecha de factura</label>
-                    <input type="date" id="fecha_factura" name="fecha_factura" required>
+                    <label for="fecha_factura">Fecha de factura</label>
+                    <input type="date" v-model="fechaFactura" id="fecha_factura" name="fecha_factura" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="numero_cuotas">Cuotas</label>
-                    <input type="number" id="numero_coutas" name="numero_cuotas" required>
+                    <input type="number" v-model="cuotas" id="numero_coutas" name="numero_cuotas" required>
                 </fieldset>
 
                 <fieldset>
                     <label for="valor_cuotas">Valor por cuota</label>
-                    <input type="number" id="valor_cuotas" name="valor_cuotas" required>
+                    <input type="number" v-model="valorCuota" id="valor_cuotas" name="valor_cuotas" required>
                 </fieldset>
 
             </section>
@@ -24,8 +24,8 @@
             <section class="section-derecha">
 
                 <fieldset>
-                    <label for="conjunto" >Conjunto</label>
-                    <input type="text" id="conjunto" name="conjunto" required>
+                    <label for="conjunto">Conjunto</label>
+                    <input type="text" v-model="conjunto" id="conjunto" name="conjunto" required>
                 </fieldset>
 
                 <fieldset>
@@ -35,7 +35,7 @@
 
                 <fieldset>
                     <label for="apartamento">Apartamento</label>
-                    <input type="number" id="apartamento" name="apartamento" required>
+                    <input type="number" v-model="apartamento" id="apartamento" name="apartamento" required>
                 </fieldset>
 
             </section>
@@ -60,7 +60,7 @@
                         <td><input type="checkbox"></td>
                     </tr>
                 </table>
-                
+
                 <button @click="Prueba">
                     Agregar Factura
                 </button>
@@ -69,37 +69,265 @@
         </form>
 
     </main>
-    
+
 </template>
 
 <script>
 export default ({
-    data(){
-        return{
-            encabezados:['Pagos', 'Facturación', 'Informes'],
-            detalles:{
+    data() {
+        return {
+            encabezados: ['Pagos', 'Facturación', 'Informes'],
+            detalles: {
                 FechaFactura: Date,
                 Ncuotas: Number,
                 Vcuotas: Number,
                 Conjunto: Text,
                 Bloque: Number,
                 Apartamento: Number,
-            }
+            },
+            facturas: {},
+            nroFactura: "",
+            apartamento: {},
+            fechaFactura: "",
+            fechaLimitePago: "",
+            cuotaActual: "",
+            valordetalle: "",//tentativamente pues puedo almacenar el valor de detalle en valor y al final sumarle el valor de la cuota actual 
+            valorFactura: "",//suma los valores en la tabla detalles y el de la cuota actual
+            token: localStorage.getItem("tokenLogin"),
+            mensajeError: "",
+            //actualizando: false,
+            parametros: {},
+            url: "http://localhost:8080/api/factura",
         }
-    }, 
+    },
     methods: {
-        Prueba(){
-            this.FechaFactura = document.getElementById("numero_cuotas");
-            console.log(document.getElementById("numero_cuotas"));
-        }
-    }
-})
+        crear() {
+            if (this.entradaValida()) {
+                const tablaDetalles = document.getElementById("tablaDetalles");
+                for (let i = 1, row; row = tablaDetalles.rows[i]; i++) {
+                    this.valorFactura = this.valorFactura + row.cell[2];
+                }; console.log(this.valorFactura);
+                this.valorFactura = this.valorFactura + this.cuotaActual;
+                this.parametros.apartamento = this.apartamento.idApartamento;
+                this.parametros.fechaFactura = this.fechaFactura;
+                this.parametros.fechaLimitePago = this.fechaLimitePago;
+                this.parametros.valorFactura = this.valorFactura;
+
+                // if (!this.actualizando) {
+
+                this.hacerPeticion();
+                this.$forceUpdate();
+                /* } else {
+                     this.metodo = "PUT";
+                     this.url = this.url + `/${this.nitConjunto}`
+                     this.hacerPeticion();
+                 };*/
+
+            } else {
+                this.mensajeError = "Por favor ingrese todos los datos.";
+                alert(this.mensajeError);
+            };
+        },
+
+        crearDetalleFactura(idApartamento, nroFactura, valorFactura) {
+            this.parametros.idApartamento = idApartamento;
+            this.parametros.nroFactura = nroFactura;
+            this.parametros.valorFactura = valorFactura;
+            this.url = "http://localhost:8080/api/detalleFactura";
+            this.hacerPeticion();
+        },
+
+        entradaValida() {
+            return toString(this.apartamento).trim() && this.fechaFactura.trim() && this.fechaLimitePago.trim() && this.cuotaActual.trim();
+        },
+
+        async hacerPeticion() {
+            const options = {
+                method: "POST",
+                body: JSON.stringify(this.parametros),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.token,
+                },
+            };
+
+            fetch(this.url, options).then(async (response) => {
+                if (!response.ok) {
+                    const { error } = response;
+                    //error.json = response.json();
+                    this.mensajeError = error.message;
+                    throw error;
+                } else {
+                    alert("Factura creada exitosamente!")
+
+                    const data = await response.json();
+                    this.nroFactura = data.nroFactura;
+                    this.parametros = {};
+                    crearDetalleFactura(this.idApartamento, this.nroFactura, this.valorFactura);
+                    /* if (data.length > 0) {
+                          for (let conjunto in data) {
+                              const data1 = data[conjunto]
+                              this.conjuntos.push(data1);
+                          };
+                      }
+                      else {
+                          window.location.reload();
+                      };*/
+                };
+            });
+        },
+    },
+    /*mounted() {
+         this.hacerPeticion();
+     },*/
+});
 
 </script>
 
 
-<style scoped>
 
+
+
+<script>
+
+/*export default {
+    data() {
+        return {
+            encabezados: ["Pagos", "Facturación", "Informes"],
+            conjuntos: [],
+            nombreConjunto: "",
+            nitConjunto: "",
+            direccionConjunto: "",
+            telefonoConjunto: "",
+            token: localStorage.getItem("tokenLogin"),
+            mensajeError: "",
+            actualizando: false,
+            url: "http://localhost:8080/api/Conjunto",
+            metodo: "GET",
+            parametros: {},
+
+        };
+    },
+
+    methods: {
+        crear() {
+            if (this.entradaValida()) {
+                this.parametros.nombreConjunto = this.nombreConjunto;
+                this.parametros.direccionConjunto = this.direccionConjunto;
+                this.parametros.telefonoConjunto = this.telefonoConjunto;
+
+                if (!this.actualizando) {
+                    this.parametros.nitConjunto = this.nitConjunto;
+                    this.metodo = "POST";
+                    this.hacerPeticion();
+                    this.$forceUpdate();
+                } else {
+                    this.metodo = "PUT";
+                    this.url = this.url + `/${this.nitConjunto}`
+                    this.hacerPeticion();
+                };
+
+            } else {
+                this.mensajeError = "Por favor ingrese todos los datos.";
+                alert(this.mensajeError);
+            }
+        },
+
+        actualizar(conjunto) {
+            console.log(conjunto);
+            this.nitConjunto = conjunto.nitConjunto;
+            document.getElementById('nit').disabled = true;
+            this.nombreConjunto = conjunto.nombreConjunto;
+            this.direccionConjunto = conjunto.direccionConjunto;
+            this.telefonoConjunto = conjunto.telefonoConjunto;
+            document.getElementById('crear').innerText = "Actualizar";
+
+            this.actualizando = true;
+        },
+
+        eliminar(nitConjunto) {
+            this.metodo = "DELETE";
+            this.url = this.url + `/${nitConjunto}`
+            this.hacerPeticion();
+            window.location.reload();
+        },
+
+
+        entradaValida() {
+            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
+        },
+
+        consultar() {
+            const options = {
+                method: this.metodo,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.token,
+                }
+            };
+
+            fetch(this.url, options).then(async (response) => {
+                if (!response.ok) {
+                    const { error } = response;
+                    throw error;
+                } else {
+                    const data = await response.json();
+                    for (let conjunto in data) {
+                        const data1 = data[conjunto]
+                        this.conjuntos.push(data1);
+                    };
+                };
+            });
+
+        },
+
+        async hacerPeticion() {
+            let options = {};
+
+            if (this.metodo != "GET" && this.metodo != "DELETE") {
+                options = {
+                    method: this.metodo,
+                    body: JSON.stringify(this.parametros),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.token,
+                    },
+                };
+            } else {
+                options = {
+                    method: this.metodo,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + this.token,
+                    },
+                };
+            };
+
+            fetch(this.url, options).then(async (response) => {
+                if (!response.ok) {
+                    const { error } = response;
+                    console.log(error);
+                    throw error;
+                } else {
+                    window.location.reload();
+                };
+            });
+        },
+    },
+    mounted() {
+        this.consultar();
+    },
+};*/
+</script>
+
+
+
+
+
+
+
+
+<style scoped>
 main {
     height: 100%;
     grid-row: 2/3;
@@ -150,7 +378,7 @@ label {
     font-weight: bold;
 }
 
-input{
+input {
     width: 50%;
     border: none;
     background-color: var(--background-second);
@@ -162,8 +390,8 @@ input{
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 table {
@@ -185,11 +413,13 @@ th:nth-child(3) {
     width: 20%;
 }
 
-th, td {
+th,
+td {
     background-color: transparent;
 }
 
-td, th {
+td,
+th {
     text-align: center;
     padding: 8px;
 }
@@ -214,5 +444,4 @@ button {
 button:hover {
     background-color: var(--background-second);
 }
-
 </style>

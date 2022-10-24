@@ -20,11 +20,15 @@ public class DetalleFactura implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long norDetalleFactura;
-	@Column(length = 70, nullable=false)
-	private String conceptoFactura;
+	@Column(unique=true)
+	private Long nroDetalleFactura;
+			
 	@Column (length = 10, nullable=false)
-	private Float valorUnitarioProducto;	
+	private Float valorFacturaPendiente;
+	
+	@JoinColumn(name = "apartamento", referencedColumnName = "idApartamento")
+	@ManyToOne
+	private Apartamento apartamento;
 	
 	@JoinColumn(name = "factura", referencedColumnName = "nroFactura")
 	@ManyToOne
@@ -32,17 +36,44 @@ public class DetalleFactura implements Serializable{
 
 	public DetalleFactura() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public String toString() {
-		return "DetalleFactura [norDetalleFactura=" + norDetalleFactura + ", conceptoFactura=" + conceptoFactura
-				+ ", valorUnitarioProducto=" + valorUnitarioProducto + ", factura=" + factura + "]";
+	public Long getNroDetalleFactura() {
+		return nroDetalleFactura;
+	}
+
+	public void setNroDetalleFactura(Long nroDetalleFactura) {
+		this.nroDetalleFactura = nroDetalleFactura;
+	}
+
+	public Float getValorFacturaPendiente() {
+		return valorFacturaPendiente;
+	}
+
+	public void setValorFacturaPendiente(Float valorFacturaPendiente) {
+		this.valorFacturaPendiente = valorFacturaPendiente;
+	}
+
+	public Apartamento getApartamento() {
+		return apartamento;
+	}
+
+	public void setApartamento(Apartamento apartamento) {
+		this.apartamento = apartamento;
+	}
+
+	public Factura getFactura() {
+		return factura;
+	}
+
+	public void setFactura(Factura factura) {
+		this.factura = factura;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(conceptoFactura, factura, norDetalleFactura, valorUnitarioProducto);
+		return Objects.hash(apartamento, factura, nroDetalleFactura, valorFacturaPendiente);
 	}
 
 	@Override
@@ -54,42 +85,16 @@ public class DetalleFactura implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		DetalleFactura other = (DetalleFactura) obj;
-		return Objects.equals(conceptoFactura, other.conceptoFactura) && Objects.equals(factura, other.factura)
-				&& Objects.equals(norDetalleFactura, other.norDetalleFactura)
-				&& Objects.equals(valorUnitarioProducto, other.valorUnitarioProducto);
+		return Objects.equals(apartamento, other.apartamento) && Objects.equals(factura, other.factura)
+				&& Objects.equals(nroDetalleFactura, other.nroDetalleFactura)
+				&& Objects.equals(valorFacturaPendiente, other.valorFacturaPendiente);
 	}
 
-	public Long getNorDetalleFactura() {
-		return norDetalleFactura;
+	@Override
+	public String toString() {
+		return "DetalleFactura [nroDetalleFactura=" + nroDetalleFactura + ", valorFacturaPendiente="
+				+ valorFacturaPendiente + ", apartamento=" + apartamento + ", factura=" + factura + "]";
 	}
 
-	public void setNorDetalleFactura(Long norDetalleFactura) {
-		this.norDetalleFactura = norDetalleFactura;
-	}
-
-	public String getConceptoFactura() {
-		return conceptoFactura;
-	}
-
-	public void setConceptoFactura(String conceptoFactura) {
-		this.conceptoFactura = conceptoFactura;
-	}
-
-	public Float getValorUnitarioProducto() {
-		return valorUnitarioProducto;
-	}
-
-	public void setValorUnitarioProducto(Float valorUnitarioProducto) {
-		this.valorUnitarioProducto = valorUnitarioProducto;
-	}
-
-	public Factura getFactura() {
-		return factura;
-	}
-
-	public void setFactura(Factura factura) {
-		this.factura = factura;
-	}
-	
-	
+		
 }

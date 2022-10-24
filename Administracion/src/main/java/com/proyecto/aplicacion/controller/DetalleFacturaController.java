@@ -53,7 +53,7 @@ public class DetalleFacturaController {
 			return ResponseEntity.notFound().build();
 		}
 		BeanUtils.copyProperties(conceptoDetalleF, detalleFactura.get());
-		detalleFactura.get().setNorDetalleFactura(nroDetalleFactura);				
+		detalleFactura.get().setNroDetalleFactura(nroDetalleFactura);				
 		return ResponseEntity.status(HttpStatus.CREATED).body(detalleFacturaService.crearDetalleFactura(detalleFactura.get()));
 	}
 	

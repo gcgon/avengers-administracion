@@ -22,6 +22,7 @@ public class Apartamento {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique=true)
 	private Long idApartamento;
 	@Column(nullable=false)
 	private Long bloque_apartamento;
@@ -31,6 +32,10 @@ public class Apartamento {
 	@JsonIgnore
 	@OneToMany(mappedBy="apartamento", cascade=CascadeType.REMOVE) 
 	private List<Factura> facturas;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="apartamento", cascade=CascadeType.REMOVE) 
+	private List<DetalleFactura> detallesFactura;
 	
 	@JoinColumn(name = "usuario", referencedColumnName = "nro_documento_usuario")
 	@ManyToOne
@@ -78,9 +83,16 @@ public class Apartamento {
 	public void setConjunto(Conjunto conjunto) {
 		this.conjunto = conjunto;
 	}
+	public List<DetalleFactura> getDetallesFactura() {
+		return detallesFactura;
+	}
+	public void setDetallesFactura(List<DetalleFactura> detallesFactura) {
+		this.detallesFactura = detallesFactura;
+	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(bloque_apartamento, conjunto, facturas, idApartamento, numero_apartamento, usuario);
+		return Objects.hash(bloque_apartamento, conjunto, detallesFactura, facturas, idApartamento, numero_apartamento,
+				usuario);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -92,17 +104,16 @@ public class Apartamento {
 			return false;
 		Apartamento other = (Apartamento) obj;
 		return Objects.equals(bloque_apartamento, other.bloque_apartamento) && Objects.equals(conjunto, other.conjunto)
-				&& Objects.equals(facturas, other.facturas) && Objects.equals(idApartamento, other.idApartamento)
+				&& Objects.equals(detallesFactura, other.detallesFactura) && Objects.equals(facturas, other.facturas)
+				&& Objects.equals(idApartamento, other.idApartamento)
 				&& Objects.equals(numero_apartamento, other.numero_apartamento)
 				&& Objects.equals(usuario, other.usuario);
 	}
 	@Override
 	public String toString() {
 		return "Apartamento [idApartamento=" + idApartamento + ", bloque_apartamento=" + bloque_apartamento
-				+ ", numero_apartamento=" + numero_apartamento + ", facturas=" + facturas + ", usuario=" + usuario
-				+ ", conjunto=" + conjunto + "]";
+				+ ", numero_apartamento=" + numero_apartamento + ", facturas=" + facturas + ", detallesFactura="
+				+ detallesFactura + ", usuario=" + usuario + ", conjunto=" + conjunto + "]";
 	}
-	
 		
-	
 }

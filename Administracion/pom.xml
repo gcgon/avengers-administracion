@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
+			 <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
@@ -71,10 +71,11 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+		
 	</dependencies>		
-
+	
 	<build>
-		<finalName>ProyectoAdmin</finalName>
+	    <finalName>Administracion</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

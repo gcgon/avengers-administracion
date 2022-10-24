@@ -8,6 +8,7 @@ import com.proyecto.aplicacion.model.DetalleFactura;
 public interface DetalleFacturaService {
 	public List<DetalleFactura> consultarDetallesFactura();
 	public Optional<DetalleFactura>consultarDetalleFactura(Long nroDetalleFactura);
+	public List<DetalleFactura>consultarDetalleFacturaP(Long apartamento);
 	public DetalleFactura crearDetalleFactura(DetalleFactura detallefactura);
 	public void eliminarDetalleFactura(Long nroDetalleFactura);
 }

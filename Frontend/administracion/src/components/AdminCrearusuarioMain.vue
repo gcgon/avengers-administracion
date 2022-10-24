@@ -1,88 +1,102 @@
 <template>
 
     <main>
-        <form action="">
-            <section class="section-izquierda">
 
-                <fieldset>
-                    <label for="nombre">Nombre(s) </label>
-                    <input type="text" v-model="nombreUsuario" id="nombre" name="nombre" required>
-                </fieldset>
+        <section class="section-formulario">
 
-                <fieldset>
-                    <label for="apellido">Apellido(s)</label>
-                    <input type="text" v-model="apellido" id="apellido" name="apellido" required>
-                </fieldset>
+            <form action="">
+                <section class="section-formulario-top">
+                    <fieldset>
+                        <label for="rol">Rol</label>
+                        <input list="rolOptions" v-model="rol" id="rol" name="rol" required>
+                        <datalist id="rolOptions">
+                            <option value="administrador"></option>
+                            <option value="usuario"></option>
+                        </datalist>
+                    </fieldset>
+                </section>
 
-                <fieldset>
-                    <label for="contrasenia">Contraseña</label>
-                    <input type="password" v-model="clave" id="contrasenia" name="contrasenia" required>
-                </fieldset>
+                <section class="section-formulario-izquierda">
 
-            </section>
+                    <fieldset>
+                        <label for="nombre">Nombre(s) </label>
+                        <input type="text" v-model="nombreUsuario" id="nombre" name="nombre" required>
+                    </fieldset>
 
-            <section class="section-derecha">
+                    <fieldset>
+                        <label for="tipo_documento">Tipo de documento</label>
+                        <input type="text" v-model="tipoDocumento" id="tipo_documento" name="tipo_documento" required>
+                    </fieldset>
 
-                <fieldset>
-                    <label for="tipo_documento">Tipo de documento</label>
-                    <input type="text" v-model="tipoDocumento" id="tipo_documento" name="tipo_documento" required>
-                </fieldset>
+                    <fieldset>
+                        <label for="numero_contacto">Número de contacto</label>
+                        <input type="number" v-model.number="telefono" id="numero_contacto" name="numero_contacto"
+                            required>
+                    </fieldset>
 
-                <fieldset>
-                    <label for="numero_documento">Número de Documento</label>
-                    <input type="number" v-model.number="nro_documento_usuario" id="numero_documento"
-                        name="numero_documento" required>
-                </fieldset>
 
-                <fieldset>
-                    <label for="numero_contacto">Número de contacto</label>
-                    <input type="number" v-model.number="telefono" id="numero_contacto" name="numero_contacto" required>
-                </fieldset>
 
-            </section>
+                </section>
 
-            <section class="section-bottom">
-                <fieldset>
-                    <label for="rol">Rol</label>
-                    <input type="text" id="rol" name="rol" required>
-                </fieldset>
+                <section class="section-formulario-derecha">
 
-                <button>
-                    Crear Usuario
-                </button>
+                    <fieldset>
+                        <label for="apellido">Apellido(s)</label>
+                        <input type="text" v-model="apellido" id="apellido" name="apellido" required>
+                    </fieldset>
 
-                <table id="tabla">
-                    <tr>
-                        <th>Tipo documento</th>
-                        <th>Número de documento</th>
-                        <th>Nombres</th>
-                        <th>Apellidos</th>
-                        <th>Teléfono</th>
-                        <th>Rol</th>
-                        <th>Clave</th>
+                    <fieldset>
+                        <label for="numero_documento">Número de Documento</label>
+                        <input type="number" v-model.number="nro_documento_usuario" id="numero_documento"
+                            name="numero_documento" required>
+                    </fieldset>
 
-                        <th></th>
-                    </tr>
+                    <fieldset>
+                        <label for="contrasenia">Contraseña</label>
+                        <input type="password" v-model="clave" id="contrasenia" name="contrasenia" required>
+                    </fieldset>
 
-                    <tr v-for="(usuario,index) in usuarios" :key="index">
-                        <td>{{usuario.tipoDocumento}}</td>
-                        <td>{{usuario.nro_documento_usuario}}</td>
-                        <td>{{usuario.nombreUsuario}}</td>
-                        <td>{{usuario.apellido}}</td>
-                        <td>{{usuario.telefono}}</td>
-                        <td>{{usuario.rol}}</td>
-                        <td>{{usuario.clave}}</td>
-                        <td>
-                            <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(usuario)" />
-                            <img src="./imgs/basura.png" alt="agregar"
-                                @click="eliminar(usuario.nro_documento_usuario)" />
-                        </td>
-                    </tr>
-                </table>
+                </section>
 
-            </section>
+                <section class="section-formulario-bottom">
 
-        </form>
+                    <button id="crear" @click="crear">
+                        Crear Usuario
+                    </button>
+
+                </section>
+
+            </form>
+        </section>
+
+        <section class="section-tabla">
+            <table>
+                <tr>
+                    <th>Tipo</th>
+                    <th>No. de documento</th>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Teléfono</th>
+                    <th>Rol</th>
+                    <th>Clave</th>
+                    <th></th>
+                </tr>
+
+                <tr v-for="(usuario,index) in usuarios" :key="index">
+                    <td>{{usuario.tipoDocumento}}</td>
+                    <td>{{usuario.nro_documento_usuario}}</td>
+                    <td>{{usuario.nombreUsuario}}</td>
+                    <td>{{usuario.apellido}}</td>
+                    <td>{{usuario.telefono}}</td>
+                    <td>{{usuario.rol}}</td>
+                    <td>{{usuario.clave}}</td>
+                    <td>
+                        <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(usuario)" />
+                        <img src="./imgs/basura.png" alt="agregar" @click="eliminar(usuario.nro_documento_usuario)" />
+                    </td>
+                </tr>
+            </table>
+        </section>
 
     </main>
 
@@ -93,11 +107,12 @@
 export default {
     data() {
         return {
+            encabezados: ["Pagos", "Facturación", "Informes"],
             usuarios: [],
             nombreUsuario: "",
             apellido: "",
-            tipoDocumento: "",
             nro_documento_usuario: "",
+            tipoDocumento: "",
             telefono: "",
             rol: "",
             clave: "",
@@ -114,38 +129,23 @@ export default {
     methods: {
         crear() {
             if (this.entradaValida()) {
+                this.parametros.nombreUsuario = this.nombreUsuario;
+                this.parametros.apellido = this.apellido;
+                this.parametros.tipoDocumento = this.tipoDocumento;
+                this.parametros.telefono = this.telefono;
+                this.parametros.rol = this.rol;
+                this.parametros.clave = this.clave;
 
                 if (!this.actualizando) {
-                    this.parametros.nombreUsuario = this.nombreUsuario;
-                    this.parametros.apellido = this.apellido;
                     this.parametros.nro_documento_usuario = this.nro_documento_usuario;
-                    this.parametros.tipoDocumento = this.tipoDocumento;
-                    this.parametros.telefono = this.telefono;
-                    this.parametros.rol = this.rol;
-                    this.parametros.clave = this.clave;
                     this.metodo = "POST";
                     this.hacerPeticion();
-                    console.log(this.usuarios);
-                    this.nombreUsuario = "";
-                    this.apellido = "";
-                    this.telefono = "";
-                    this.nro_documento_usuario = "";
-                    this.tipoDocumento = "";
-                    this.rol = "";
-                    this.clave = "";
-                    this.mensajeError = "";
-                    this.actualizando = false;
                     this.$forceUpdate();
                 } else {
-                    this.parametros.nombreUsuario = this.nombreUsuario;
-                    this.parametros.apellido = this.apellido;
-                    this.parametros.tipoDocumento = this.tipoDocumento;
-                    this.parametros.telefono = this.telefono;
-                    this.parametros.rol = this.rol;
-                    this.parametros.clave = this.clave;
                     this.metodo = "PUT";
                     this.url = this.url + `/${this.nro_documento_usuario}`
                     this.hacerPeticion();
+                    this.$forceUpdate();
                 };
 
             } else {
@@ -160,11 +160,10 @@ export default {
             document.getElementById('numero_documento').disabled = true;
             this.nombreUsuario = usuario.nombreUsuario;
             this.apellido = usuario.apellido;
-            this.telefono = usuario.telefono;
             this.tipoDocumento = usuario.tipoDocumento;
+            this.telefono = usuario.telefono;
             this.rol = usuario.rol;
             this.clave = usuario.clave;
-
             document.getElementById('crear').innerText = "Actualizar";
 
             this.actualizando = true;
@@ -179,11 +178,36 @@ export default {
 
 
         entradaValida() {
-            return toString(this.nro_documento_usuario).trim() && this.tipoDocumento.trim() && this.nombreUsuario.trim() && this.apellido.trim() && toString(this.telefono).trim && this.rol.trim() && this.clave.trim();
+            return toString(this.nro_documento_usuario).trim() && this.nombreUsuario.trim() && this.tipoDocumento.trim() && this.rol.trim() && this.clave.trim();
+        },
+
+        consultar() {
+            const options = {
+                method: this.metodo,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.token,
+                }
+            };
+
+            fetch(this.url, options).then(async (response) => {
+                if (!response.ok) {
+                    const { error } = response;
+                    throw error;
+                } else {
+                    const data = await response.json();
+                    for (let usuario in data) {
+                        const data1 = data[usuario]
+                        this.usuarios.push(data1);
+                    };
+                };
+            });
+
         },
 
         async hacerPeticion() {
             let options = {};
+
             if (this.metodo != "GET" && this.metodo != "DELETE") {
                 options = {
                     method: this.metodo,
@@ -201,32 +225,21 @@ export default {
                         "Authorization": "Bearer " + this.token,
                     },
                 };
-            }
+            };
 
             fetch(this.url, options).then(async (response) => {
                 if (!response.ok) {
-                    const error = response.statusText;
-                    // error.json = response.json();
-                    this.mensajeError = error.message;
+                    const { error } = response;
+                    console.log(error);
                     throw error;
                 } else {
-                    const data = await response.json();
-                    console.log(data);
-                    if (data.length > 0) {
-                        for (let usuario in data) {
-                            const data1 = data[usuario]
-                            this.usuarios.push(data1);
-                        };
-                    }
-                    else {
-                        window.location.reload();
-                    };
+                    // window.location.reload();
                 };
             });
         },
     },
     mounted() {
-        this.hacerPeticion();
+        this.consultar();
     },
 };
 </script>
@@ -237,6 +250,27 @@ main {
     height: 100%;
     grid-row: 2/3;
     grid-column: 1/4;
+    display: grid;
+    grid-template-columns: 50%;
+    grid-template-rows: 50%;
+}
+
+section {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    font-size: var(--md);
+}
+
+.section-formulario {
+    grid-row: 1/2;
+    grid-column: 1/3;
+}
+
+.section-tabla {
+    grid-row: 2/3;
+    grid-column: 1/3;
 }
 
 form {
@@ -244,31 +278,30 @@ form {
     width: 100%;
     display: grid;
     grid-template-columns: 50%;
-    grid-template-rows: 50% 50%;
+    grid-template-rows: 15% 60%;
 }
 
-section {
-    font-size: var(--md);
+.section-formulario-top {
     grid-row: 1/2;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    height: 100%;
+    grid-column: 1/3;
+    width: 60%;
+    justify-self: center;
 }
 
-.section-izquierda {
+.section-formulario-izquierda {
+    grid-row: 2/3;
     grid-column: 1/2;
 }
 
-.section-derecha {
+.section-formulario-derecha {
+    grid-row: 2/3;
     grid-column: 2/3;
 }
 
-.section-bottom {
-    grid-row: 2/3;
+.section-formulario-bottom {
+    grid-row: 3/4;
     grid-column: 1/3;
-    width: 50%;
+    width: 40%;
     justify-self: center;
 }
 
@@ -316,5 +349,63 @@ button {
 
 button:hover {
     background-color: var(--background-second);
+}
+
+
+table {
+    width: 90%;
+    border: none;
+    background-color: var(--background-second);
+    border-radius: var(--border-buttons);
+}
+
+th:nth-child(1) {
+    width: 10%;
+}
+
+th:nth-child(2) {
+    width: 20%;
+}
+
+th:nth-child(3) {
+    width: 15%;
+}
+
+th:nth-child(4) {
+    width: 15%;
+}
+
+th:nth-child(5) {
+    width: 10%;
+}
+
+th:nth-child(6) {
+    width: 10%;
+}
+
+th:nth-child(7) {
+    width: 10%;
+}
+
+th:nth-child(8) {
+    width: 10%;
+}
+
+th,
+td {
+    background-color: transparent;
+    text-align: center;
+    padding: 8px;
+}
+
+td {
+    font-size: var(--md-sm);
+}
+
+img {
+    height: 30px;
+    background-color: transparent;
+    margin-right: 25px;
+    cursor: pointer;
 }
 </style>

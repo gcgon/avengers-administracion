@@ -20,24 +20,25 @@ public class Usuario implements Serializable{
 	private static final long serialVersionUID = -6693602575509371765L;
 	
 	@Id
+	@Column(unique=true, nullable=false)
 	private Long nro_documento_usuario;
 	
-	@Column(name="nombre_usuario", length = 50)
+	@Column(nullable=false, length = 50)
 	private String nombreUsuario;
 	
-	@Column(name="apellido", length = 50)
+	@Column(length = 50)
 	private String apellido;
 	
-	@Column(name="tipo_documento", length = 30)
+	@Column(nullable=false, length = 30)
 	private String tipoDocumento;
 	
-	@Column(name="telefono", length = 50)
+	@Column(length = 50)
 	private Long telefono;
 	
-	@Column(name="rol", length = 30)
+	@Column(nullable=false, length = 30)
 	private String rol;
 	
-	@Column(name="clave", length = 45)
+	@Column(nullable=false, length = 45)
 	private String clave;
 	
 	@JsonIgnore

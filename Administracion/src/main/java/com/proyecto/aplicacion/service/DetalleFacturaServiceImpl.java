@@ -29,6 +29,12 @@ public class DetalleFacturaServiceImpl implements DetalleFacturaService {
 	public Optional<DetalleFactura> consultarDetalleFactura(Long nroDetalleFactura) {
 		return repositorio.findById(nroDetalleFactura);
 	}
+	
+	@Override
+	public List<DetalleFactura> consultarDetalleFacturaP(Long apartamento) {
+		List<DetalleFactura> detallesFacturasP = repositorio.consultarDetalleFacturaP(apartamento);
+		return detallesFacturasP;
+	}
 
 	@Override
 	@Transactional

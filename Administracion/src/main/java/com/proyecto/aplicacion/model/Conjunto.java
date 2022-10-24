@@ -21,6 +21,7 @@ public class Conjunto implements Serializable {
 
 	private static final long serialVersionUID = 3108585289022917839L;
 	@Id
+	@Column(unique=true)
 	private Long nitConjunto;
 	@Column(length = 70, nullable=false)
 	private String nombreConjunto;

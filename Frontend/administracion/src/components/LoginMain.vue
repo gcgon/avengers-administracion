@@ -77,8 +77,9 @@ export default {
       fetch("http://localhost:8080/api/authorization", options).then(async (response) => {
         if (!response.ok) {
           console.log(response.statusText);
-          const error = new Error(response.statusText);
-          error.json = response.json();
+          const { error } = response;
+          //error.json = response.json();
+          console.log(error);
           this.mensajeError = error.message;
           console.log("error", this.mensajeError);
           throw error;

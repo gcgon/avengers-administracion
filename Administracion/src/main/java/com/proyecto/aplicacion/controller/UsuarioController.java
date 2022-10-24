@@ -57,7 +57,7 @@ public class UsuarioController  implements Serializable {
 		} 
 		BeanUtils.copyProperties(usuario, persona.get());
 		persona.get().setNro_documento_usuario(id);
-		return ResponseEntity.status(HttpStatus.CREATED).body(servicio.crearUsuario(usuario));
+		return ResponseEntity.status(HttpStatus.CREATED).body(servicio.crearUsuario(persona.get()));
 	}
 	
 	@DeleteMapping("/{id}")

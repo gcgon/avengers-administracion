@@ -14,7 +14,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JWTUtil {
 	
-	public String getJWTToken(String keyword) {/**acá es donde la profesora por ser solo id pasa un parámetro pero pueden ser los parámetos que vaya a validar**/
+	public String getJWTToken(String keyword) {
 		String secretKey = "mySecretKey";
 		List<GrantedAuthority> grantedAuthorities = AuthorityUtils
 				.commaSeparatedStringToAuthorityList("ROLE_USER");
@@ -28,7 +28,6 @@ public class JWTUtil {
 								.map(GrantedAuthority::getAuthority)
 								.collect(Collectors.toList()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 600000))
 				.signWith(SignatureAlgorithm.HS512,
 						secretKey.getBytes()).compact();
 

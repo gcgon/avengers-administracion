@@ -1,60 +1,73 @@
 <template>
+
     <main>
         <form action="">
             <section class="section-izquierda">
+
                 <fieldset>
-                    <label for="nit">Nit</label>
-                    <input type="number" id="nit" v-model.number="nitConjunto" name="nitConjunto" required />
+                    <label for="nit">Conjunto</label>
+                    <input type="number" v-model="conjunto" id="nit" name="nit">
                 </fieldset>
 
                 <fieldset>
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" v-model="nombreConjunto" name="nombreConjunto" required />
+                    <img src="./imgs/agregar.png" alt="agregar" id="add2" @click="ToCrearUsuario">
+                    <label for="usuario" id="add1">Usuario</label>
+                    <input type="text" v-model="usuario" id="usuario" name="usuario">
                 </fieldset>
+
             </section>
 
             <section class="section-derecha">
+
                 <fieldset>
-                    <label for="direccion">Dirección</label>
-                    <input type="text" id="direccion" v-model="direccionConjunto" name="direccionConjunto" required />
+                    <label for="bloque">Bloque</label>
+                    <input type="number" v-model="bloque_apartamento" id="bloque" name="bloque" required
+                        placeholder="b5">
                 </fieldset>
 
                 <fieldset>
-                    <label for="telefono">Teléfono</label>
-                    <input type="text" id="telefono" v-model.number="telefonoConjunto" name="telefonoConjunto"
-                        required />
+                    <label for="apartaamento">Apartamento</label>
+                    <input type="number" v-model.number="numero_apartamento" id="apartamento" name="apartamento"
+                        required placeholder="###">
                 </fieldset>
+
             </section>
-            <button id="crear" @click="crear" type="button" class="btn btn-outline-primary">Crear</button>
+            <button>
+                Crear
+            </button>
+
         </form>
         <section class="section-inferior">
 
-            <table id="tabla">
+            <table>
                 <tr>
-                    <th>Nit</th>
-                    <th>Nombre</th>
-                    <th>Dirección</th>
-                    <th>Teléfono del conjunto</th>
+                    <th>Conjunto</th>
+                    <th>Usuario</th>
+                    <th>Bloque</th>
+                    <th>Apartamento</th>
+                    <th>Conjunto</th>
                     <th></th>
                 </tr>
 
-                <tr v-for="(conjunto,index) in conjuntos" :key="index">
-                    <td>{{conjunto.nitConjunto}}</td>
-                    <td>{{conjunto.nombreConjunto}}</td>
-                    <td>{{conjunto.direccionConjunto}}</td>
-                    <td>{{conjunto.telefonoConjunto}}</td>
+                <tr v-for="(apartamento,index) in apartamentos" :key="index">
+                    <td>{{apartamento.conjunto}}</td>
+                    <td>{{apartamento.usuario}}</td>
+                    <td>{{apartamento.bloque_apartamento}}</td>
+                    <td>{{apartamento.numero_apartamento}}</td>
                     <td>
-                        <img src="./imgs/agregar.png" alt="agregar"
-                            @click="this.$router.push('apartamentosAdministrador')" />
-                        <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(conjunto)" />
-                        <img src="./imgs/basura.png" alt="agregar" @click="eliminar(conjunto.nitConjunto)" />
+                        <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(apartamento)" />
+                        <img src="./imgs/basura.png" alt="agregar" @click="eliminar(apartamento.idApartamento)" />
                     </td>
                 </tr>
+
             </table>
 
-            <button>Ver apartamentos</button>
+            <button @click="Volver">
+                Volver
+            </button>
         </section>
     </main>
+
 </template>
 
 <script>
@@ -63,15 +76,16 @@ export default {
     data() {
         return {
             encabezados: ["Pagos", "Facturación", "Informes"],
-            conjuntos: [],
-            nombreConjunto: "",
-            nitConjunto: "",
-            direccionConjunto: "",
-            telefonoConjunto: "",
+            apartamentos: [],
+            idApartamento: "",
+            bloque_apartamento: "",
+            numero_apartamento: "",
+            conjunto: "",
+            usuario: "",
             token: localStorage.getItem("tokenLogin"),
             mensajeError: "",
             actualizando: false,
-            url: "http://localhost:8080/api/Conjunto",
+            url: "http://localhost:8080/apartamento",
             metodo: "GET",
             parametros: {},
 
@@ -81,19 +95,18 @@ export default {
     methods: {
         crear() {
             if (this.entradaValida()) {
-                this.parametros.nombreConjunto = this.nombreConjunto;
-                this.parametros.direccionConjunto = this.direccionConjunto;
-                this.parametros.telefonoConjunto = this.telefonoConjunto;
+                this.parametros.numero_apartamento = this.numero_apartamento;
+                this.parametros.bloque_apartamento = this.bloque_apartamento;
 
                 if (!this.actualizando) {
-                    this.parametros.nitConjunto = this.nitConjunto;
+                    this.parametros.idApartamento = this.idApartamento;
                     this.metodo = "POST";
                     this.hacerPeticion();
-                    this.$forceUpdate();
+                    //this.$forceUpdate();
                 } else {
                     this.metodo = "PUT";
-                    this.url = this.url + `/${this.nitConjunto}`
-                    this.hacerPeticion();
+                    this.url = this.url + `/${this.idApartamento}`
+                    //this.hacerPeticion();
                 };
 
             } else {
@@ -102,28 +115,27 @@ export default {
             }
         },
 
-        actualizar(conjunto) {
-            console.log(conjunto);
-            this.nitConjunto = conjunto.nitConjunto;
-            document.getElementById('nit').disabled = true;
-            this.nombreConjunto = conjunto.nombreConjunto;
-            this.direccionConjunto = conjunto.direccionConjunto;
-            this.telefonoConjunto = conjunto.telefonoConjunto;
+        actualizar(apartamento) {
+            //console.log(conjunto);
+            this.idApartamento = apartamento.idApartamento;
+            document.getElementById('idApartamento').disabled = true;
+            this.numeroApartamento = apartamento.numero_apartamento;
+            this.bloqueApartamento = apartamento.bloque_apartamento;
             document.getElementById('crear').innerText = "Actualizar";
 
             this.actualizando = true;
         },
 
-        eliminar(nitConjunto) {
+        eliminar(idApartamento) {
             this.metodo = "DELETE";
-            this.url = this.url + `/${nitConjunto}`
+            this.url = this.url + `/${idApartamento}`
             this.hacerPeticion();
             window.location.reload();
         },
 
 
         entradaValida() {
-            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
+            return toString(this.numero_apartamento).trim() && toString(this.bloque_apartamento).trim();
         },
 
         consultar() {
@@ -141,9 +153,9 @@ export default {
                     throw error;
                 } else {
                     const data = await response.json();
-                    for (let conjunto in data) {
-                        const data1 = data[conjunto]
-                        this.conjuntos.push(data1);
+                    for (let apartamento in data) {
+                        const data1 = data[apartamento]
+                        this.apartamentos.push(data1);
                     };
                 };
             });
@@ -178,7 +190,9 @@ export default {
                     console.log(error);
                     throw error;
                 } else {
-                    window.location.reload();
+                    const data = await response.json();
+                    consonle.log(data);
+                    //window.location.reload();
                 };
             });
         },
@@ -189,6 +203,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 main {
     height: 100%;
@@ -196,7 +211,7 @@ main {
     grid-column: 1/4;
     display: grid;
     grid-template-columns: 50%;
-    grid-template-rows: 30%;
+    grid-template-rows: 35%;
 }
 
 form {
@@ -206,7 +221,7 @@ form {
     width: 100%;
     display: grid;
     grid-template-columns: 50%;
-    grid-template-rows: 50%;
+    grid-template-rows: 60%;
 }
 
 section {
@@ -217,6 +232,7 @@ section {
     justify-content: space-evenly;
     align-items: center;
     height: 100%;
+
 }
 
 .section-izquierda {
@@ -239,6 +255,7 @@ fieldset {
     border: none;
     display: flex;
     flex-direction: row;
+    padding-top: 16px;
 }
 
 label {
@@ -271,23 +288,27 @@ table {
 }
 
 th:nth-child(1) {
-    width: 10%;
+    width: 15%;
 }
 
 th:nth-child(2) {
-    width: 10%;
+    width: 25%;
 }
 
 th:nth-child(3) {
-    width: 30%;
+    width: 10%;
 }
 
 th:nth-child(4) {
-    width: 30%;
+    width: 20%;
 }
 
 th:nth-child(5) {
-    width: 20%;
+    width: 10%;
+}
+
+th:nth-child(6) {
+    width: 15%;
 }
 
 th,
@@ -304,11 +325,10 @@ th {
 img {
     height: 30px;
     background-color: transparent;
-    margin-left: 30px;
-    cursor: pointer;
+    margin-right: 25px;
 }
 
-input[type="checkbox"] {
+input[type=checkbox] {
     height: 20px;
 }
 
@@ -324,9 +344,20 @@ button {
     justify-self: center;
     font-weight: bold;
     margin: 20px 0;
+    align-self: center;
 }
 
 button:hover {
     background-color: var(--background-second);
+}
+
+#add1 {
+    width: 10%;
+    margin-right: 14.8%;
+}
+
+#add2 {
+    margin-left: 8%;
+    cursor: pointer;
 }
 </style>

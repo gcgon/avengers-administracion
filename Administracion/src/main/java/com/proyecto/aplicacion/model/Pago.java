@@ -24,11 +24,11 @@ public class Pago implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "codigo_pago", unique=true)
+	@Column(unique=true)
 	private Long codigoPago;
-	@Column(name = "fecha_pago", length = 255, nullable=false)
+	@Column(length = 255, nullable=false)
 	private Timestamp fechaPago;
-	@Column(name = "valor_pago", precision = 10, scale = 2, nullable=false)
+	@Column(precision = 10, scale = 2, nullable=false)
 	private BigDecimal valorPago;
 	
 	@ManyToOne

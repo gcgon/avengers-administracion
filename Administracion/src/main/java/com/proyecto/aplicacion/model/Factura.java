@@ -1,10 +1,12 @@
 package com.proyecto.aplicacion.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,13 +22,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "factura")
-public class Factura {
+public class Factura implements Serializable{
 	
-	private static final long serialVersionUID = 8576299165550475463L;
+	private static final long serialVersionUID = -572756588602899328L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique=true)
 	private Long nroFactura;
+	@Column (nullable=false)
 	private Date fechaFactura;
+	@Column (nullable=false)
+	private Date fechaLimitePago;
+	@Column (nullable=false)
 	private Float valor;
 		
 	@JoinColumn(name = "apartamento", referencedColumnName = "idApartamento")
@@ -40,31 +47,10 @@ public class Factura {
 	@JsonIgnore
 	@OneToMany(mappedBy="factura", cascade=CascadeType.REMOVE) 
 	private List<DetalleFactura> detalleFactura;
-	
-	
-	
-	public Float getValor() {
-		return valor;
-	}
-
-	public void setValor(Float valor) {
-		this.valor = valor;
-	}
-
-	public Apartamento getApartamento() {
-		return apartamento;
-	}
-
-	public void setApartamento(Apartamento apartamento) {
-		this.apartamento = apartamento;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
 
 	public Factura() {
-
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	public Long getNroFactura() {
@@ -82,8 +68,31 @@ public class Factura {
 	public void setFechaFactura(Date fechaFactura) {
 		this.fechaFactura = fechaFactura;
 	}
-		
-	
+
+	public Date getFechaLimitePago() {
+		return fechaLimitePago;
+	}
+
+	public void setFechaLimitePago(Date fechaLimitePago) {
+		this.fechaLimitePago = fechaLimitePago;
+	}
+
+	public Float getValor() {
+		return valor;
+	}
+
+	public void setValor(Float valor) {
+		this.valor = valor;
+	}
+
+	public Apartamento getApartamento() {
+		return apartamento;
+	}
+
+	public void setApartamento(Apartamento apartamento) {
+		this.apartamento = apartamento;
+	}
+
 	public List<Pago> getPagos() {
 		return pagos;
 	}
@@ -91,8 +100,6 @@ public class Factura {
 	public void setPagos(List<Pago> pagos) {
 		this.pagos = pagos;
 	}
-	
-	
 
 	public List<DetalleFactura> getDetalleFactura() {
 		return detalleFactura;
@@ -104,7 +111,7 @@ public class Factura {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(apartamento, fechaFactura, nroFactura, valor);
+		return Objects.hash(apartamento, detalleFactura, fechaFactura, fechaLimitePago, nroFactura, pagos, valor);
 	}
 
 	@Override
@@ -116,12 +123,18 @@ public class Factura {
 		if (getClass() != obj.getClass())
 			return false;
 		Factura other = (Factura) obj;
-		return Objects.equals(apartamento, other.apartamento) && Objects.equals(fechaFactura, other.fechaFactura)
-				&& Objects.equals(nroFactura, other.nroFactura) && Objects.equals(valor, other.valor);
+		return Objects.equals(apartamento, other.apartamento) && Objects.equals(detalleFactura, other.detalleFactura)
+				&& Objects.equals(fechaFactura, other.fechaFactura)
+				&& Objects.equals(fechaLimitePago, other.fechaLimitePago)
+				&& Objects.equals(nroFactura, other.nroFactura) && Objects.equals(pagos, other.pagos)
+				&& Objects.equals(valor, other.valor);
 	}
 
 	@Override
 	public String toString() {
-		return "Factura [nroFactura=" + nroFactura + ", fechaFactura=" + fechaFactura + "]";
-	}
+		return "Factura [nroFactura=" + nroFactura + ", fechaFactura=" + fechaFactura + ", fechaLimitePago="
+				+ fechaLimitePago + ", valor=" + valor + ", apartamento=" + apartamento + ", pagos=" + pagos
+				+ ", detalleFactura=" + detalleFactura + "]";
+	}	
+	
 }
