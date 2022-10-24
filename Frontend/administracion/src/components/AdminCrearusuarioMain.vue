@@ -34,8 +34,6 @@
                             required>
                     </fieldset>
 
-
-
                 </section>
 
                 <section class="section-formulario-derecha">
@@ -119,7 +117,7 @@ export default {
             token: localStorage.getItem("tokenLogin"),
             mensajeError: "",
             actualizando: false,
-            url: "http://localhost:8080/api/usuario",
+            url: "http://132.145.158.155:8080/Administracion/api/usuario",
             metodo: "GET",
             parametros: {},
 
@@ -233,7 +231,7 @@ export default {
                     console.log(error);
                     throw error;
                 } else {
-                    // window.location.reload();
+                    window.location.reload();
                 };
             });
         },

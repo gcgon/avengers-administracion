@@ -12,13 +12,12 @@
       <hr />
       <div v-show="mensajeError" class="alert alert-danger col-12" role="alert">
         <h4 class="alert-heading">Error</h4>
-        <!-- <p>mensajeError</p> -->
       </div>
 
-      <router-link to="/reportesAdministrador" @click="iniciarSesion" tag="button" class="button-login">
+      <router-link :to=redireccionamiento @click="iniciarSesion" tag="button" class="button-login">
         Iniciar Sesión
       </router-link>
-      <hr />
+
       <div v-show="mensajeError" class="alert alert-danger col-12" role="alert">
         <h4 class="alert-heading">Error</h4>
         <p>clave y/o usuario errados</p>
@@ -37,6 +36,8 @@ export default {
       encabezados: ["Pagos", "Facturación", "Informes"],
       documentoIdentidad: "",
       contrasenia: "",
+      rol: "",
+      redireccionamiento: "",
       token: "pendiente",
       mensajeError: "",
       persona: {},
@@ -70,28 +71,27 @@ export default {
         body: JSON.stringify(this.authUser),
         headers: {
           "Content-Type": "application/json",
-          /* , 'Authorization': 'Bearer '+this.token */
         },
       };
 
-      fetch("http://localhost:8080/api/authorization", options).then(async (response) => {
+      fetch("http://132.145.158.155:8080/Administracion/api/authorization", options).then(async (response) => {
         if (!response.ok) {
-          console.log(response.statusText);
           const { error } = response;
-          //error.json = response.json();
-          console.log(error);
           this.mensajeError = error.message;
-          console.log("error", this.mensajeError);
           throw error;
         } else {
           const data = await response.json();
-          console.log(data.access.split("("));
           [this.token, this.persona] = data.access.split("(");
           localStorage.setItem("tokenLogin", this.token);
           localStorage.setItem("persona", this.persona);
-          console.log(this.persona);
+          let temp = this.persona.split(" ");
+          if (temp[6] == "rol=administrador,"){
+            this.redireccionamiento = '/reportesAdministrador';
+          }else {
+            this.redireccionamiento = '/inicioEncargado';
+          }
         }
-      });//[this.apellido, this.nombre] = nombreCompleto.toString().split(", ");
+      });
     },
   },
 };

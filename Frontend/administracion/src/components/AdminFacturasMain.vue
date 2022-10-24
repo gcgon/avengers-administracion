@@ -1,8 +1,17 @@
 <template>
 
     <main>
+
         <form action="">
             <section class="section-izquierda">
+
+                <fieldset>
+                    <label for="conjunto">Conjunto</label>
+                    <input list="conjuntos" v-model="conjunto" id="conjunto" name="conjunto" required>
+                    <datalist name="conjuntos">
+                        <option value="csasad"></option>
+                    </datalist>
+                </fieldset>
 
                 <fieldset>
                     <label for="fecha_factura">Fecha de factura</label>
@@ -10,13 +19,8 @@
                 </fieldset>
 
                 <fieldset>
-                    <label for="numero_cuotas">Cuotas</label>
-                    <input type="number" v-model="cuotas" id="numero_coutas" name="numero_cuotas" required>
-                </fieldset>
-
-                <fieldset>
-                    <label for="valor_cuotas">Valor por cuota</label>
-                    <input type="number" v-model="valorCuota" id="valor_cuotas" name="valor_cuotas" required>
+                    <label for="fecha_limite">Fecha límite de pago</label>
+                    <input type="date" v-model="fechaLimitePago" id="fecha_limite" name="fecha_limite" required>
                 </fieldset>
 
             </section>
@@ -24,18 +28,22 @@
             <section class="section-derecha">
 
                 <fieldset>
-                    <label for="conjunto">Conjunto</label>
-                    <input type="text" v-model="conjunto" id="conjunto" name="conjunto" required>
-                </fieldset>
-
-                <fieldset>
-                    <label for="bloque">Bloque</label>
-                    <input type="number" id="bloque" name="bloque" required>
-                </fieldset>
-
-                <fieldset>
                     <label for="apartamento">Apartamento</label>
-                    <input type="number" v-model="apartamento" id="apartamento" name="apartamento" required>
+                    <input list="apartamentos" v-model="apartamento" id="apartamento" name="apartamento" required>
+                    <datalist name="apartamentos">
+                        <option value="casadfasf"></option>
+                        <option value="casadfasf"></option>
+                    </datalist>
+                </fieldset>
+
+                <fieldset>
+                    <label for="valor_cuotas">Cuota actual ($)</label>
+                    <input type="number" v-model="valorCuota" id="valor_cuotas" name="valor_cuotas" required placeholder="$120000">
+                </fieldset>
+
+                <fieldset>
+                    <label for="valor_total">Total factura</label>
+                    <input type="number" v-model="valorFactura" id="valor_total" name="valor_total" disabled>
                 </fieldset>
 
             </section>
@@ -44,25 +52,21 @@
                 <table>
                     <tr>
                         <th>No.</th>
-                        <th>Detalle</th>
-                        <th>Agregar</th>
+                        <th>Factura pendiente</th>
+                        <th>Valor</th>
                     </tr>
 
-                    <tr>
-                        <td>1</td>
-                        <td>Cuota mensual administración</td>
-                        <td><input type="checkbox"></td>
+                    <tr v-for="(conjunto,index) in conjuntos" :key="index">
+                        <td>{{conjunto.nitConjunto}}</td>
+                        <td>{{conjunto.nombreConjunto}}</td>
+                        <td>{{conjunto.direccionConjunto}}</td>
+                        <td>{{conjunto.telefonoConjunto}}</td>
                     </tr>
 
-                    <tr>
-                        <td>2</td>
-                        <td>Moroso de cuotas</td>
-                        <td><input type="checkbox"></td>
-                    </tr>
                 </table>
 
-                <button @click="Prueba">
-                    Agregar Factura
+                <button>
+                    Crear Factura
                 </button>
 
             </section>
@@ -91,13 +95,11 @@ export default ({
             fechaFactura: "",
             fechaLimitePago: "",
             cuotaActual: "",
-            valordetalle: "",//tentativamente pues puedo almacenar el valor de detalle en valor y al final sumarle el valor de la cuota actual 
-            valorFactura: "",//suma los valores en la tabla detalles y el de la cuota actual
+            valorFactura: "",
             token: localStorage.getItem("tokenLogin"),
             mensajeError: "",
-            //actualizando: false,
             parametros: {},
-            url: "http://localhost:8080/api/factura",
+            url: "http://132.145.158.155:8080/Administracion/api/factura",
         }
     },
     methods: {
@@ -113,15 +115,8 @@ export default ({
                 this.parametros.fechaLimitePago = this.fechaLimitePago;
                 this.parametros.valorFactura = this.valorFactura;
 
-                // if (!this.actualizando) {
-
                 this.hacerPeticion();
                 this.$forceUpdate();
-                /* } else {
-                     this.metodo = "PUT";
-                     this.url = this.url + `/${this.nitConjunto}`
-                     this.hacerPeticion();
-                 };*/
 
             } else {
                 this.mensajeError = "Por favor ingrese todos los datos.";
@@ -129,11 +124,33 @@ export default ({
             };
         },
 
+        consultar() {
+            const options = {
+                method: this.metodo,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + this.token,
+                }
+            };
+            fetch(this.url, options).then(async (response) => {
+                if (!response.ok) {
+                    const { error } = response;
+                    throw error;
+                } else {
+                    const data = await response.json();
+                    for (let conjunto in data) {
+                        const data1 = data[conjunto]
+                        this.conjuntos.push(data1);
+                    };
+                };
+            });
+        },
+
         crearDetalleFactura(idApartamento, nroFactura, valorFactura) {
             this.parametros.idApartamento = idApartamento;
             this.parametros.nroFactura = nroFactura;
             this.parametros.valorFactura = valorFactura;
-            this.url = "http://localhost:8080/api/detalleFactura";
+            this.url = "http://132.145.158.155:8080/Administracion/api/detalleFactura";
             this.hacerPeticion();
         },
 
@@ -154,178 +171,21 @@ export default ({
             fetch(this.url, options).then(async (response) => {
                 if (!response.ok) {
                     const { error } = response;
-                    //error.json = response.json();
                     this.mensajeError = error.message;
                     throw error;
                 } else {
                     alert("Factura creada exitosamente!")
-
                     const data = await response.json();
                     this.nroFactura = data.nroFactura;
                     this.parametros = {};
                     crearDetalleFactura(this.idApartamento, this.nroFactura, this.valorFactura);
-                    /* if (data.length > 0) {
-                          for (let conjunto in data) {
-                              const data1 = data[conjunto]
-                              this.conjuntos.push(data1);
-                          };
-                      }
-                      else {
-                          window.location.reload();
-                      };*/
                 };
             });
         },
     },
-    /*mounted() {
-         this.hacerPeticion();
-     },*/
 });
 
 </script>
-
-
-
-
-
-<script>
-
-/*export default {
-    data() {
-        return {
-            encabezados: ["Pagos", "Facturación", "Informes"],
-            conjuntos: [],
-            nombreConjunto: "",
-            nitConjunto: "",
-            direccionConjunto: "",
-            telefonoConjunto: "",
-            token: localStorage.getItem("tokenLogin"),
-            mensajeError: "",
-            actualizando: false,
-            url: "http://localhost:8080/api/Conjunto",
-            metodo: "GET",
-            parametros: {},
-
-        };
-    },
-
-    methods: {
-        crear() {
-            if (this.entradaValida()) {
-                this.parametros.nombreConjunto = this.nombreConjunto;
-                this.parametros.direccionConjunto = this.direccionConjunto;
-                this.parametros.telefonoConjunto = this.telefonoConjunto;
-
-                if (!this.actualizando) {
-                    this.parametros.nitConjunto = this.nitConjunto;
-                    this.metodo = "POST";
-                    this.hacerPeticion();
-                    this.$forceUpdate();
-                } else {
-                    this.metodo = "PUT";
-                    this.url = this.url + `/${this.nitConjunto}`
-                    this.hacerPeticion();
-                };
-
-            } else {
-                this.mensajeError = "Por favor ingrese todos los datos.";
-                alert(this.mensajeError);
-            }
-        },
-
-        actualizar(conjunto) {
-            console.log(conjunto);
-            this.nitConjunto = conjunto.nitConjunto;
-            document.getElementById('nit').disabled = true;
-            this.nombreConjunto = conjunto.nombreConjunto;
-            this.direccionConjunto = conjunto.direccionConjunto;
-            this.telefonoConjunto = conjunto.telefonoConjunto;
-            document.getElementById('crear').innerText = "Actualizar";
-
-            this.actualizando = true;
-        },
-
-        eliminar(nitConjunto) {
-            this.metodo = "DELETE";
-            this.url = this.url + `/${nitConjunto}`
-            this.hacerPeticion();
-            window.location.reload();
-        },
-
-
-        entradaValida() {
-            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
-        },
-
-        consultar() {
-            const options = {
-                method: this.metodo,
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + this.token,
-                }
-            };
-
-            fetch(this.url, options).then(async (response) => {
-                if (!response.ok) {
-                    const { error } = response;
-                    throw error;
-                } else {
-                    const data = await response.json();
-                    for (let conjunto in data) {
-                        const data1 = data[conjunto]
-                        this.conjuntos.push(data1);
-                    };
-                };
-            });
-
-        },
-
-        async hacerPeticion() {
-            let options = {};
-
-            if (this.metodo != "GET" && this.metodo != "DELETE") {
-                options = {
-                    method: this.metodo,
-                    body: JSON.stringify(this.parametros),
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + this.token,
-                    },
-                };
-            } else {
-                options = {
-                    method: this.metodo,
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + this.token,
-                    },
-                };
-            };
-
-            fetch(this.url, options).then(async (response) => {
-                if (!response.ok) {
-                    const { error } = response;
-                    console.log(error);
-                    throw error;
-                } else {
-                    window.location.reload();
-                };
-            });
-        },
-    },
-    mounted() {
-        this.consultar();
-    },
-};*/
-</script>
-
-
-
-
-
-
-
 
 <style scoped>
 main {
@@ -334,7 +194,9 @@ main {
     grid-column: 1/4;
 }
 
+
 form {
+    grid-row: 2/3;
     height: 100%;
     width: 100%;
     display: grid;
@@ -395,7 +257,7 @@ input::-webkit-inner-spin-button {
 }
 
 table {
-    width: 50%;
+    width: 80%;
     border: none;
     background-color: var(--background-second);
     border-radius: var(--border-buttons);

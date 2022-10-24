@@ -21,8 +21,7 @@
 
                 <fieldset>
                     <label for="telefono">Teléfono</label>
-                    <input type="text" id="telefono" v-model.number="telefonoConjunto" name="telefonoConjunto"
-                        required />
+                    <input type="text" id="telefono" v-model="telefonoConjunto" name="telefonoConjunto" required />
                 </fieldset>
             </section>
             <button id="crear" @click="crear" type="button" class="btn btn-outline-primary">Crear</button>
@@ -45,7 +44,7 @@
                     <td>{{conjunto.telefonoConjunto}}</td>
                     <td>
                         <img src="./imgs/agregar.png" alt="agregar"
-                            @click="this.$router.push('apartamentosAdministrador')" />
+                            @click="this.$router.push('crearUsuariosAdministrador')" />
                         <img src="./imgs/lapiz.png" alt="agregar" @click="actualizar(conjunto)" />
                         <img src="./imgs/basura.png" alt="agregar" @click="eliminar(conjunto.nitConjunto)" />
                     </td>
@@ -71,7 +70,7 @@ export default {
             token: localStorage.getItem("tokenLogin"),
             mensajeError: "",
             actualizando: false,
-            url: "http://localhost:8080/api/Conjunto",
+            url: "http://132.145.158.155:8080/Administracion/api/Conjunto",
             metodo: "GET",
             parametros: {},
 
@@ -121,11 +120,6 @@ export default {
             window.location.reload();
         },
 
-
-        entradaValida() {
-            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
-        },
-
         consultar() {
             const options = {
                 method: this.metodo,
@@ -134,7 +128,6 @@ export default {
                     "Authorization": "Bearer " + this.token,
                 }
             };
-
             fetch(this.url, options).then(async (response) => {
                 if (!response.ok) {
                     const { error } = response;
@@ -147,7 +140,11 @@ export default {
                     };
                 };
             });
+        },
 
+
+        entradaValida() {
+            return toString(this.nitConjunto).trim() && this.nombreConjunto.trim() && this.direccionConjunto.trim();
         },
 
         async hacerPeticion() {

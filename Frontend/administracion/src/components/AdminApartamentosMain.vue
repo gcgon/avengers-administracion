@@ -85,7 +85,7 @@ export default {
             token: localStorage.getItem("tokenLogin"),
             mensajeError: "",
             actualizando: false,
-            url: "http://localhost:8080/apartamento",
+            url: "http://132.145.158.155:8080/Administracion/apartamento",
             metodo: "GET",
             parametros: {},
 
@@ -102,11 +102,9 @@ export default {
                     this.parametros.idApartamento = this.idApartamento;
                     this.metodo = "POST";
                     this.hacerPeticion();
-                    //this.$forceUpdate();
                 } else {
                     this.metodo = "PUT";
                     this.url = this.url + `/${this.idApartamento}`
-                    //this.hacerPeticion();
                 };
 
             } else {
@@ -116,7 +114,6 @@ export default {
         },
 
         actualizar(apartamento) {
-            //console.log(conjunto);
             this.idApartamento = apartamento.idApartamento;
             document.getElementById('idApartamento').disabled = true;
             this.numeroApartamento = apartamento.numero_apartamento;
@@ -192,7 +189,6 @@ export default {
                 } else {
                     const data = await response.json();
                     consonle.log(data);
-                    //window.location.reload();
                 };
             });
         },
